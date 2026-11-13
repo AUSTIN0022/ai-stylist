@@ -1,0 +1,654 @@
+{
+ "version": 1,
+ "updated": "2026-11-14",
+ "notes": "Brand names for label matching. A plain string is a brand whose only alias is its own name. 'lineOnly' aliases are short or common words that count only when they are the whole OCR line. 'source': store = seen in the retailer's own product feed; official = company website; reported = news or secondary sources (lower confidence). Logos are deliberately not stored.",
+ "groups": [
+  {
+   "owner": "Trent (Tata)",
+   "parent": "Westside",
+   "source": "store",
+   "sourceUrl": "https://global.westside.com/products.json (vendor field, fetched 2026-11-14)",
+   "brands": [
+    {
+     "name": "WES",
+     "aliases": [
+      "wes casuals",
+      "wes formals",
+      "wes"
+     ],
+     "lineOnly": [
+      "wes"
+     ]
+    },
+    {
+     "name": "Wardrobe",
+     "aliases": [],
+     "lineOnly": [
+      "wardrobe"
+     ]
+    },
+    {
+     "name": "Nuon",
+     "aliases": [
+      "nuon"
+     ],
+     "lineOnly": []
+    },
+    {
+     "name": "Nuoflexx",
+     "aliases": [
+      "nuoflexx",
+      "nuoflex"
+     ],
+     "lineOnly": []
+    },
+    {
+     "name": "Luna Blu",
+     "aliases": [
+      "luna blu"
+     ],
+     "lineOnly": []
+    },
+    {
+     "name": "Diza",
+     "aliases": [],
+     "lineOnly": [
+      "diza"
+     ]
+    },
+    {
+     "name": "Wunderlove",
+     "aliases": [
+      "wunderlove"
+     ],
+     "lineOnly": []
+    },
+    {
+     "name": "Ascot",
+     "aliases": [],
+     "lineOnly": [
+      "ascot"
+     ]
+    },
+    {
+     "name": "Y&F",
+     "aliases": [
+      "y&f teen",
+      "y&f",
+      "y & f"
+     ],
+     "lineOnly": []
+    },
+    {
+     "name": "Bombay Paisley",
+     "aliases": [
+      "bombay paisley"
+     ],
+     "lineOnly": []
+    },
+    {
+     "name": "Gia",
+     "aliases": [
+      "gia curves"
+     ],
+     "lineOnly": [
+      "gia"
+     ]
+    },
+    {
+     "name": "Utsa",
+     "aliases": [],
+     "lineOnly": [
+      "utsa"
+     ]
+    },
+    {
+     "name": "Zuba",
+     "aliases": [],
+     "lineOnly": [
+      "zuba"
+     ]
+    },
+    {
+     "name": "Vark",
+     "aliases": [],
+     "lineOnly": [
+      "vark"
+     ]
+    },
+    {
+     "name": "E.T.A",
+     "aliases": [
+      "e.t.a"
+     ],
+     "lineOnly": [
+      "eta"
+     ]
+    },
+    {
+     "name": "Westside",
+     "aliases": [
+      "westside"
+     ],
+     "lineOnly": []
+    }
+   ]
+  },
+  {
+   "owner": "Trent (Tata)",
+   "parent": "Westside",
+   "source": "official",
+   "sourceUrl": "https://global.westside.com/ (brand menu); https://www.tata.com/newsroom/business/westside-story-tata-trent",
+   "brands": [
+    {
+     "name": "L.O.V",
+     "aliases": [
+      "l.o.v"
+     ],
+     "lineOnly": [
+      "lov"
+     ]
+    },
+    {
+     "name": "Studiofit",
+     "aliases": [
+      "studiofit",
+      "studio fit"
+     ],
+     "lineOnly": []
+    }
+   ]
+  },
+  {
+   "owner": "Trent (Tata)",
+   "parent": "Zudio",
+   "source": "official",
+   "brands": [
+    "Zudio"
+   ]
+  },
+  {
+   "owner": "Reliance Retail",
+   "parent": "Reliance Trends",
+   "source": "official",
+   "sourceUrl": "https://relianceretail.com/reliance-trends.html; https://www.ril.com/about/products-brands",
+   "brands": [
+    "Avaasa",
+    "Frendz",
+    "Pureza",
+    "Netplay",
+    "Performax",
+    "Graviti",
+    "Point Cove",
+    "John Players",
+    "Svrnaa",
+    "Altheory",
+    "Siyabi",
+    "Outryt",
+    "Buda Jeans Co",
+    "Knobbx",
+    {
+     "name": "Fig",
+     "aliases": [],
+     "lineOnly": [
+      "fig"
+     ]
+    },
+    {
+     "name": "DNMX",
+     "aliases": [
+      "the dnmx",
+      "dnmx"
+     ],
+     "lineOnly": []
+    },
+    {
+     "name": "Teamspirit",
+     "aliases": [
+      "teamspirit",
+      "team spirit"
+     ],
+     "lineOnly": []
+    },
+    {
+     "name": "Rio",
+     "aliases": [],
+     "lineOnly": [
+      "rio"
+     ]
+    },
+    {
+     "name": "Fusion",
+     "aliases": [],
+     "lineOnly": [
+      "fusion"
+     ]
+    },
+    {
+     "name": "Hawt",
+     "aliases": [],
+     "lineOnly": [
+      "hawt"
+     ]
+    }
+   ]
+  },
+  {
+   "owner": "Reliance Retail",
+   "parent": "Reliance Retail",
+   "source": "official",
+   "brands": [
+    "Azorte",
+    "Yousta"
+   ]
+  },
+  {
+   "owner": "Aditya Birla Lifestyle Brands",
+   "parent": null,
+   "source": "official",
+   "sourceUrl": "https://www.abfrl.com/our-business-overview/mfl-brands/",
+   "brands": [
+    "Louis Philippe",
+    "Van Heusen",
+    "Allen Solly",
+    "Peter England",
+    "Simon Carter",
+    "American Eagle"
+   ]
+  },
+  {
+   "owner": "Aditya Birla Fashion and Retail",
+   "parent": null,
+   "source": "official",
+   "sourceUrl": "https://en.wikipedia.org/wiki/Aditya_Birla_Fashion_and_Retail; https://careers.adityabirla.com/fashion-retail",
+   "brands": [
+    "Pantaloons",
+    "Jaypore",
+    "Tasva",
+    "Aurelia",
+    "Wishful",
+    "Elleven",
+    "Folksong",
+    "Marigold Lane",
+    "Masaba",
+    "Sabyasachi",
+    "Tarun Tahiliani",
+    "Shantanu & Nikhil",
+    "Bewakoof",
+    "Ted Baker",
+    "Fred Perry",
+    "Hackett"
+   ]
+  },
+  {
+   "owner": "Aditya Birla Fashion and Retail",
+   "parent": "Pantaloons",
+   "source": "reported",
+   "brands": [
+    "Rangmanch",
+    "Akkriti",
+    "Ajile",
+    "Annabelle",
+    "Byford",
+    "SF Jeans",
+    {
+     "name": "Honey",
+     "aliases": [],
+     "lineOnly": [
+      "honey"
+     ]
+    }
+   ]
+  },
+  {
+   "owner": "Myntra",
+   "parent": "Myntra",
+   "source": "reported",
+   "sourceUrl": "https://fashionunited.in/news/retail/myntra-banks-on-private-labels-to-boost-growth/2015121712813; https://www.lycra.com/en/business/news/myntra-house-brands",
+   "brands": [
+    "Roadster",
+    "Mast & Harbour",
+    "Anouk",
+    "DressBerry",
+    "Invictus",
+    "Kook N Keech",
+    "Moda Rapido",
+    "Sangria",
+    "Kalini",
+    "House of Pataudi",
+    "Metronaut",
+    {
+     "name": "HRX",
+     "aliases": [
+      "hrx"
+     ],
+     "lineOnly": []
+    },
+    {
+     "name": "Here&Now",
+     "aliases": [
+      "here&now",
+      "here & now",
+      "here and now"
+     ],
+     "lineOnly": []
+    }
+   ]
+  },
+  {
+   "owner": "Shoppers Stop",
+   "parent": "Shoppers Stop",
+   "source": "reported",
+   "brands": [
+    "Kashish",
+    "Haute Curry",
+    "Vettorio Fratini",
+    "Elliza Donatein",
+    {
+     "name": "Stop",
+     "aliases": [],
+     "lineOnly": [
+      "stop"
+     ]
+    },
+    {
+     "name": "Life",
+     "aliases": [],
+     "lineOnly": [
+      "life"
+     ]
+    }
+   ]
+  },
+  {
+   "owner": "Landmark Group",
+   "parent": "Lifestyle",
+   "source": "reported",
+   "brands": [
+    "Melange",
+    "Fame Forever",
+    {
+     "name": "Max",
+     "aliases": [],
+     "lineOnly": [
+      "max"
+     ]
+    },
+    {
+     "name": "Code",
+     "aliases": [],
+     "lineOnly": [
+      "code"
+     ]
+    },
+    {
+     "name": "Ginger",
+     "aliases": [],
+     "lineOnly": [
+      "ginger"
+     ]
+    }
+   ]
+  },
+  {
+   "owner": "Arvind Fashions",
+   "parent": null,
+   "source": "reported",
+   "brands": [
+    "Flying Machine",
+    {
+     "name": "Arrow",
+     "aliases": [],
+     "lineOnly": [
+      "arrow"
+     ]
+    },
+    {
+     "name": "U.S. Polo Assn.",
+     "aliases": [
+      "u.s. polo assn",
+      "us polo assn",
+      "u.s. polo",
+      "us polo"
+     ],
+     "lineOnly": []
+    }
+   ]
+  },
+  {
+   "owner": "Raymond",
+   "parent": null,
+   "source": "reported",
+   "brands": [
+    "Raymond",
+    "Park Avenue",
+    "ColorPlus",
+    "Parx"
+   ]
+  },
+  {
+   "owner": "Indian brands",
+   "parent": null,
+   "source": "reported",
+   "brands": [
+    "Spykar",
+    "Pepe Jeans",
+    {
+     "name": "Killer",
+     "aliases": [],
+     "lineOnly": [
+      "killer"
+     ]
+    },
+    "Mufti",
+    "Blackberrys",
+    "Indian Terrain",
+    "Monte Carlo",
+    "Being Human",
+    "Numero Uno",
+    "Jockey",
+    "XYXX",
+    "Rupa",
+    "Lux Cozi",
+    "Biba",
+    "Global Desi",
+    "Libas",
+    "Manyavar",
+    "Mohey",
+    "Soch",
+    "Rangriti",
+    "Red Tape",
+    "Woodland",
+    {
+     "name": "Campus",
+     "aliases": [],
+     "lineOnly": [
+      "campus"
+     ]
+    },
+    "Bata",
+    {
+     "name": "Liberty",
+     "aliases": [],
+     "lineOnly": [
+      "liberty"
+     ]
+    },
+    {
+     "name": "FabIndia",
+     "aliases": [
+      "fabindia",
+      "fab india"
+     ],
+     "lineOnly": []
+    },
+    {
+     "name": "AND",
+     "aliases": [],
+     "lineOnly": [
+      "and"
+     ]
+    },
+    {
+     "name": "Duke",
+     "aliases": [],
+     "lineOnly": [
+      "duke"
+     ]
+    },
+    {
+     "name": "W",
+     "aliases": [
+      "w for woman"
+     ],
+     "lineOnly": []
+    }
+   ]
+  },
+  {
+   "owner": "Indian D2C brands",
+   "parent": null,
+   "source": "reported",
+   "sourceUrl": "https://www.linkedin.com/posts/indianstartuptimes_top50d2cbrands2026-d2cfashionbrands-d2clifestylebrands-activity-7514287701802614784-OPY7",
+   "brands": [
+    "Snitch",
+    "Powerlook",
+    "Bonkers Corner",
+    "Urban Monkey",
+    "The Bear House",
+    "Rare Rabbit",
+    "Rareism",
+    "Beyoung",
+    "Nobero",
+    "Freakins",
+    "Bombay Shirt Company",
+    "Andamen",
+    {
+     "name": "The Souled Store",
+     "aliases": [
+      "the souled store",
+      "souled store"
+     ],
+     "lineOnly": []
+    }
+   ]
+  },
+  {
+   "owner": "International brands",
+   "parent": null,
+   "source": "reported",
+   "brands": [
+    "Zara",
+    "Uniqlo",
+    {
+     "name": "Mango",
+     "aliases": [],
+     "lineOnly": [
+      "mango"
+     ]
+    },
+    "Forever 21",
+    "Wrangler",
+    "Vero Moda",
+    "Selected Homme",
+    "Tommy Hilfiger",
+    "Calvin Klein",
+    "Lacoste",
+    "Superdry",
+    "Diesel",
+    "Nike",
+    "Adidas",
+    "Puma",
+    "Reebok",
+    "New Balance",
+    "Asics",
+    "Skechers",
+    "Under Armour",
+    "Crocs",
+    "Birkenstock",
+    "Clarks",
+    "Converse",
+    "Vans",
+    "Celio",
+    "Decathlon",
+    "Kalenji",
+    "Quechua",
+    "Domyos",
+    {
+     "name": "Hugo Boss",
+     "aliases": [
+      "hugo boss"
+     ],
+     "lineOnly": [
+      "boss",
+      "hugo"
+     ]
+    },
+    {
+     "name": "H&M",
+     "aliases": [
+      "h&m",
+      "h & m"
+     ],
+     "lineOnly": []
+    },
+    {
+     "name": "Marks & Spencer",
+     "aliases": [
+      "marks & spencer",
+      "marks and spencer"
+     ],
+     "lineOnly": [
+      "m&s"
+     ]
+    },
+    {
+     "name": "Gap",
+     "aliases": [],
+     "lineOnly": [
+      "gap"
+     ]
+    },
+    {
+     "name": "Levi's",
+     "aliases": [
+      "levi's",
+      "levis",
+      "levi strauss"
+     ],
+     "lineOnly": []
+    },
+    {
+     "name": "Lee",
+     "aliases": [],
+     "lineOnly": [
+      "lee"
+     ]
+    },
+    {
+     "name": "Jack & Jones",
+     "aliases": [
+      "jack & jones",
+      "jack and jones"
+     ],
+     "lineOnly": []
+    },
+    {
+     "name": "Only",
+     "aliases": [],
+     "lineOnly": [
+      "only"
+     ]
+    },
+    {
+     "name": "Ralph Lauren",
+     "aliases": [
+      "polo ralph lauren",
+      "ralph lauren"
+     ],
+     "lineOnly": []
+    }
+   ]
+  }
+ ]
+}

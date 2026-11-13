@@ -1,0 +1,56 @@
+name: AIStylist
+options:
+  bundleIdPrefix: com.austinmakasare
+  deploymentTarget:
+    iOS: "27.0"
+  createIntermediateGroups: true
+packages:
+  StyleEngine:
+    path: Packages/StyleEngine
+settings:
+  base:
+    SWIFT_VERSION: "6.0"
+    CODE_SIGN_STYLE: Automatic
+    DEVELOPMENT_TEAM: KUF9R72UUT   # Austin's personal team; kept here so `xcodegen generate` doesn't wipe it
+targets:
+  AIStylist:
+    type: application
+    platform: iOS
+    supportedDestinations: [iOS]
+    sources:
+      - path: App
+        type: syncedFolder
+      - path: EvalPhotos
+        type: folder
+        optional: true
+        buildPhase: resources
+    dependencies:
+      - package: StyleEngine
+      - package: StyleEngine
+        product: WardrobeImaging
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.austinmakasare.aistylist
+        TARGETED_DEVICE_FAMILY: "1"
+        GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_KEY_UILaunchScreen_Generation: YES
+        INFOPLIST_KEY_NSCameraUsageDescription: "Take photos of your clothes to add them to your wardrobe."
+        INFOPLIST_KEY_NSPhotoLibraryUsageDescription: "Pick photos of your clothes to add them to your wardrobe."
+  AIStylistTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: AppTests
+        type: syncedFolder
+    dependencies:
+      - target: AIStylist
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+schemes:
+  AIStylist:
+    build:
+      targets:
+        AIStylist: all
+    test:
+      targets: [AIStylistTests]

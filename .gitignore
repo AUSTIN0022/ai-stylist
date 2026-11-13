@@ -1,0 +1,9 @@
+AIStylist.xcodeproj/
+xcuserdata/
+DerivedData/
+.build/
+.swiftpm/
+*.xcconfig.local
+EvalPhotos/*
+!EvalPhotos/.gitkeep
+.DS_Store
