@@ -103,6 +103,35 @@ public struct ItemImageProcessor: Sendable {
         try store.save(jpeg, named: ImageStore.displayName, for: id)
     }
 
+    /// Image Playground's result (a temporary file) -> product.jpg, 1200x1500 on the catalogue backdrop #F4F4F2. The generated image is
+    /// NOT cut out again (the re-cut looked jagged): the injected provider's mask only measures the subject, then `Catalogue.productFrame`
+    /// crops 4:5 around it and levels the backdrop. No subject found: centre-crop 4:5. Writes nothing when the file cannot be read.
+    public func saveProductPhoto(from url: URL, for id: UUID) async throws {
+        guard let img = ImageCodec.decode(try Data(contentsOf: url)) else { throw ProcessingError.unreadableImage }
+        let work = Compositor.downscaled(img, maxSide: Self.workSide)
+        let framed: CGImage
+        if let m = (try? await cutout.cutout(from: work, box: nil))?.mask, let b = m.bounds {
+            framed = Catalogue.productFrame(work, subject: CGRect(x: b.minX / Double(m.width), y: b.minY / Double(m.height),
+                                                                  width: b.width / Double(m.width), height: b.height / Double(m.height)))
+        } else {
+            framed = Self.centreCrop4x5(work)
+        }
+        guard let jpeg = ImageCodec.jpegData(framed, quality: 0.9) else { throw ProcessingError.unreadableImage }
+        try store.save(jpeg, named: ImageStore.productName, for: id)
+    }
+
+    static func centreCrop4x5(_ image: CGImage) -> CGImage {
+        let w = Catalogue.canvasWidth, h = Catalogue.canvasHeight
+        let cw = min(Double(image.width), Double(image.height) * 4 / 5), ch = cw * 5 / 4
+        let rect = CGRect(x: (Double(image.width) - cw) / 2, y: (Double(image.height) - ch) / 2, width: cw, height: ch).integral
+        guard let crop = image.cropping(to: rect),
+              let ctx = CGContext(data: nil, width: w, height: h, bitsPerComponent: 8, bytesPerRow: 0, space: CGColorSpace(name: CGColorSpace.sRGB)!,
+                                  bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue) else { return image }
+        ctx.interpolationQuality = .high
+        ctx.draw(crop, in: CGRect(x: 0, y: 0, width: w, height: h))
+        return ctx.makeImage() ?? image
+    }
+
     /// Photos are loaded, processed and released one at a time (memory stays flat for 20 photos).
     public func processBatch(count: Int, box: CGRect? = nil, load: @MainActor (Int) async -> Data?,
                              onResult: @MainActor (Int, Result<ProcessedImages, Error>) -> Void) async {

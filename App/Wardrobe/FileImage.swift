@@ -10,6 +10,8 @@ extension Notification.Name {
 /// Downsampled image from disk, decoded off the main thread. Reloads when the file is rewritten in place.
 struct FileImage: View {
     let url: URL
+    /// Shown when `url` does not exist (re-checked on every reload): product.jpg first, catalogue image behind it.
+    var fallback: URL?
     var maxPixel = 400
     @State private var image: CGImage?
     @State private var reloads = 0
@@ -19,7 +21,7 @@ struct FileImage: View {
             if let image { Image(decorative: image, scale: 1).resizable().scaledToFit() } else { Color.white }
         }
         .task(id: "\(url.path)#\(reloads)") {
-            let (u, m) = (url, maxPixel)
+            let (u, m) = (FileManager.default.fileExists(atPath: url.path) ? url : (fallback ?? url), maxPixel)
             image = await Task.detached { ImageCodec.thumbnail(at: u, maxPixel: m) }.value
         }
         .onReceive(NotificationCenter.default.publisher(for: .itemImagesChanged)) { n in

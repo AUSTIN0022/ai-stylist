@@ -174,3 +174,19 @@ public protocol TokenReporting: Sendable { var lastTokenCount: Int? { get } }
 public func identityAlternatives(for subcategory: Subcategory, in category: Category) -> [Subcategory] {
     Array(subcategories(for: category).filter { $0 != subcategory }.prefix(2))
 }
+
+public extension ItemTags {
+    /// Plain-code fix after tagging: leather or suede sneakers and casual shoes are casual / smart casual, not athletic
+    /// (device test, 15 Nov). There is no sports-shoe subcategory, so every leather or suede shoe of these kinds qualifies.
+    func refined() -> ItemTags {
+        guard category == .footwear, let s = subcategory, [.sneakers, .loafers, .flats, .boots].contains(s),
+              fabric == .leather || fabric == .suede, let codes = dressCodes, codes.contains(.athletic) else { return self }
+        var t = self
+        let rest = codes.filter { $0 != .athletic }
+        t.dressCodes = rest.isEmpty ? [.casual] : rest
+        return t
+    }
+}
+
+/// The review asks "How does it fit?" only for garments (what call B asks), never footwear or accessories.
+public func asksFit(_ category: Category) -> Bool { constructionFields(for: category).contains(.fit) }

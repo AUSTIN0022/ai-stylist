@@ -55,7 +55,7 @@ private func perimeter(_ m: Mask) -> Int {
 @Test func S1B_U69_whiteRuleV2() {
     #expect(ColorExtractor.name(forHex: "D2D3CD") == .white)
     #expect(ColorExtractor.name(forHex: "D7D8D2") == .white)
-    #expect(ColorExtractor.name(forHex: "C0C0C0") == .silver)
+    #expect(ColorExtractor.name(forHex: "C0C0C0") == .white)   // 15 Nov: silver is never automatic (was .silver)
     #expect(ColorExtractor.name(forHex: "F3EBDD") == .cream)
     #expect(ColorExtractor.classify(hex: "D2D3CD").ambiguous)       // L < 90
     #expect(!ColorExtractor.classify(hex: "FFFFFF").ambiguous)

@@ -21,7 +21,7 @@ final class SpikeEvalModel {
     var running = false
     var progress = ""
     var summary = ""
-    var availability = SpikeTagger.unavailableReason() ?? "available"
+    var availability = AppleOnDeviceProvider.unavailableReason() ?? "available"
 
     func load() {
         loadProblems = []
@@ -47,7 +47,7 @@ final class SpikeEvalModel {
 
     func run() async {
         guard !running else { return }
-        availability = SpikeTagger.unavailableReason() ?? "available"
+        availability = AppleOnDeviceProvider.unavailableReason() ?? "available"
         guard availability == "available" else { summary = "Model unavailable: \(availability)"; print(summary); return }
         running = true; defer { running = false }
         let previous = Dictionary(uniqueKeysWithValues: rows.map { ($0.id, $0.got) })

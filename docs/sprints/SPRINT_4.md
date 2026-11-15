@@ -152,3 +152,14 @@ protocol IntentParser {
 ## Not this sprint
 
 Manual builder, wear log, learning from feedback, weather lookup, tool calling.
+
+## Fix round 1 (device test 15 Nov)
+
+1. **No footwear no longer blocks outfits.** When no footwear survives the filters, the engine builds outfits without the slot and returns `EngineResult.softMissing = [.footwear]` (also `StylistSession.softMissing`). The Stylist screen shows "Add shoes to complete these looks". Top plus bottom, or a one-piece, stay required.
+2. **Near-duplicate outfits.** A "look" is the sorted list of slot/category/subcategory/primary colour. The engine shows each look once in a result's top 3, and `StylistSession.shownLooks` (passed as `EngineContext.excludeLooks`) stops Another option repeating a look. Twin items stay separate in the wardrobe, and Swap may still offer the twin.
+3. **Cold is less strict.** In cold weather the filter rejects only shorts and open-toe footwear, not items whose AI season tags lack winter. The cold cover check still applies; a hoodie or sweater now counts as a warm layer even when tagged warmth 1. The S3 season test now uses shorts instead of summer trousers.
+4. **Card.** The item-name list is gone. Each cut-out carries a small capsule label inside its bottom edge. The note sits under the image (2 lines at most). The canvas ratio is 9:10 (shorter than 4:5). The grid cell stays image only; the detail screen uses the full card.
+5. **Duplicate saves.** `OutfitSaver.save` returns the existing outfit when the sorted item-id set is already saved. `StylistViewModel.isSaved` also checks the store, so a re-shown outfit shows "Saved" with Save disabled. A swap clears the saved flag, since the new item set is a different outfit. If the shown id is already used by an earlier version, the new outfit gets a fresh id.
+6. **Stylist screen.** Inline navigation title, a filled and bordered chat field with a sparkles icon and the placeholder "Describe the occasion, e.g. Diwali dinner at a friend's", a 40 pt send button, pinned with `safeAreaInset` above the tab bar and keyboard. Occasion chips stay at the top.
+
+Tests: S4-F01 to F07 in the package (`EngineFixRound1Tests`, `SessionFixRound1Tests`), S4-F08 to F10 in AppTests. Updated: S3-U20, S3-SC08, S4-U17, and the S3 season test.

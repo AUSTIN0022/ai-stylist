@@ -1,3 +1,4 @@
+import ImagePlayground
 import StyleEngine
 import SwiftData
 import SwiftUI
@@ -9,27 +10,51 @@ struct SettingsView: View {
     @Environment(\.dismiss) private var dismiss
     @Query(sort: \Item.createdAt) private var items: [Item]
     @Query private var logs: [AIRequestLog]
-    @State private var status = AIStatus.current
+    private let env: AppEnvironment
+    @State private var status: AIStatus.Info
     @State private var showDeveloper = false
+    @AppStorage(ProductPromptStyle.key) private var promptStyle = ProductPromptStyle.proven.rawValue
     @State private var confirmDelete = false
     @State private var message: String?
     @State private var refreshing = false
+    @State private var shot = ProductShotSession()
+    @State private var batchRunning = false
+    @State private var tick = 0
+    @Environment(\.supportsImagePlayground) private var supportsImagePlayground
 
-    init() {}
+    init(env: AppEnvironment) { self.env = env; _status = State(initialValue: AIStatus.current(env.provider)) }
 
     /// Rebuilds every item's display image in the catalogue look from its stored cut-out; originals and cut-outs are untouched.
     private func refreshCatalogue() {
         refreshing = true
-        let jobs = items.map { ($0.id, $0.tags.category) }
+        let jobs = items.map { ($0.id, $0.tags.category) }   // product photos already use the catalogue canvas: skipped below
+        let store = env.store
         Task.detached(priority: .userInitiated) {
-            let processor = ItemImageProcessor(cutout: VisionCutoutService(), store: .standard)
+            let processor = ItemImageProcessor(cutout: VisionCutoutService(), store: store)
             var failed = 0
-            for (id, category) in jobs { do { try processor.refreshDisplay(for: id, category: category) } catch { failed += 1 } }
+            for (id, category) in jobs where !FileManager.default.fileExists(atPath: store.url(for: ImageStore.productName, id: id).path) { do { try processor.refreshDisplay(for: id, category: category) } catch { failed += 1 } }
             await MainActor.run {
                 refreshing = false
                 message = failed == 0 ? "Updated \(jobs.count) images." : "Updated \(jobs.count - failed), \(failed) had no cut-out."
                 NotificationCenter.default.post(name: .itemImagesChanged, object: nil)
             }
+        }
+    }
+
+    private var withoutProduct: [Item] { _ = tick; return items.filter { !ProductShotSession.hasProduct($0, store: env.store) } }
+
+    /// One sheet per item, the user taps Use or Cancel each time. Cancel ends the run (the rest are offered again next time).
+    private func makeProductPhotos() {
+        batchRunning = true; shot.context = context
+        let queue = withoutProduct
+        Task {
+            for it in queue {
+                let o = await shot.make(for: it)
+                tick += 1
+                if o == .cancelled { message = "Stopped. \(withoutProduct.count) left."; break }
+                if case .failed(let e) = o { message = e; break }
+            }
+            batchRunning = false
         }
     }
 
@@ -43,17 +68,17 @@ struct SettingsView: View {
                 Section("AI") {
                     Label(status.banner == nil ? "On-device model ready" : "Off", systemImage: status.banner == nil ? "checkmark.circle" : "exclamationmark.triangle")
                     if let b = status.banner { Text(b).font(.footnote).foregroundStyle(.secondary) }
-                    Text("Tagger \(FoundationModelsTagger().version)").font(.footnote).foregroundStyle(.secondary)
+                    Text("Tagger \(env.provider.makeTagger().version)").font(.footnote).foregroundStyle(.secondary)
                     if status.manualMode == false, untagged > 0 {
-                        Button("Tag \(untagged) untagged item\(untagged == 1 ? "" : "s")") { Task { _ = await AppServices.tagging?.tagUntagged() } }
+                        Button("Tag \(untagged) untagged item\(untagged == 1 ? "" : "s")") { Task { _ = await env.tagging.tagUntagged() } }
                     }
                     if count(.failed) > 0 {
                         Button("Try again on \(count(.failed)) failed item\(count(.failed) == 1 ? "" : "s")") {
                             let ids = items.filter { $0.status == .failed }.map(\.id)
-                            Task { for id in ids { await AppServices.tagging?.retry(id) } }
+                            Task { for id in ids { await env.tagging.retry(id) } }
                         }
                     }
-                    Button("Check again") { status = AIStatus.current }
+                    Button("Check again") { status = AIStatus.current(env.provider) }
                 }
                 Section("Wardrobe") {
                     LabeledContent("Items", value: "\(items.count)")
@@ -63,12 +88,22 @@ struct SettingsView: View {
                     LabeledContent("AI calls logged", value: "\(logs.count)")
                     Button(refreshing ? "Refreshing catalogue images…" : "Refresh catalogue images") { refreshCatalogue() }
                         .disabled(refreshing || items.isEmpty)
+                    if supportsImagePlayground {
+                        Button("Make product photos (\(withoutProduct.count))") { makeProductPhotos() }
+                            .disabled(batchRunning || withoutProduct.isEmpty)
+                    } else {
+                        Text(productShotUnavailableReason).font(.footnote).foregroundStyle(.secondary)
+                    }
                 }
                 Section {
                     NavigationLink("Accuracy") { AccuracyView() }
                     NavigationLink("AI log") { AILogView() }
                 }
                 Section("Developer") {
+                    Picker("Product photo prompt", selection: $promptStyle) {
+                        ForEach(ProductPromptStyle.allCases) { Text($0.label).tag($0.rawValue) }
+                    }
+                    NavigationLink("Templates") { TemplatesView() }
                     Button("Photo eval (bundled photos)") { showDeveloper = true }
                 }
                 Section {
@@ -76,6 +111,8 @@ struct SettingsView: View {
                     if let m = message { Text(m).font(.footnote).foregroundStyle(.secondary) }
                 }
             }
+            .productShotSheet(shot)
+            .onReceive(NotificationCenter.default.publisher(for: .itemImagesChanged)) { _ in tick += 1 }
             .navigationTitle("Settings").navigationBarTitleDisplayMode(.inline)
             .toolbar { ToolbarItem(placement: .confirmationAction) { Button("Done") { dismiss() } } }
             .fullScreenCover(isPresented: $showDeveloper) {
@@ -84,7 +121,7 @@ struct SettingsView: View {
             .confirmationDialog("Delete \(DataReset.counts(in: context).summary) and all photos? This cannot be undone.",
                                 isPresented: $confirmDelete, titleVisibility: .visible) {
                 Button("Delete everything", role: .destructive) {
-                    DataReset.deleteAll(in: context, store: .standard)
+                    DataReset.deleteAll(in: context, store: env.store)
                     message = "All data deleted."
                 }
             }
@@ -107,6 +144,7 @@ struct AILogView: View {
                 Text("\(r.provider) · \(r.model) · \(r.outputTokens.map { "\($0) tokens" } ?? "tokens n/a") · \(r.createdAt.formatted(date: .abbreviated, time: .standard))")
                     .font(.caption).foregroundStyle(.secondary)
                 if let e = r.errorText { Text(e).font(.caption).foregroundStyle(.red) }
+                if let d = r.detail { Text(d).font(.caption2).foregroundStyle(.secondary) }
             }
         }
         .overlay { if all.isEmpty { ContentUnavailableView("No AI calls yet", systemImage: "list.bullet") } }

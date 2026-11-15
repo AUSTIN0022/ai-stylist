@@ -7,15 +7,18 @@ import WardrobeImaging
 struct WardrobeView: View {
     @Query(sort: \Item.createdAt, order: .reverse) private var items: [Item]
     @Environment(\.modelContext) private var context
+    @Environment(AppEnvironment.self) private var env
     @State private var review: ReviewModel?
     @State private var fromCamera: ReviewModel?   // opened once the camera has dismissed
     @State private var picked: [PhotosPickerItem] = []
     @State private var showCamera = false
     @State private var filter = WardrobeFilter()
     @State private var showSettings = false
+    @State private var shot = ProductShotSession()
+    @State private var lastReview: ReviewModel?   // its product-photo queue runs once the review has gone
 
     private let columns = [GridItem(.adaptive(minimum: 104), spacing: 8)]
-    private var store: ImageStore { .standard }
+    private var store: ImageStore { env.store }
 
     /// Sections by category, then "Unsorted" for items with no tags yet.
     private var sections: [(title: String, items: [Item])] { Self.sections(for: filtered) }
@@ -52,7 +55,7 @@ struct WardrobeView: View {
                     Spacer()
                     if section.title == "Unsorted" {
                         Button("Sort these (\(section.items.count))") {
-                            let m = ReviewModel.live(); m.beginExisting(Self.unsortedItems(filtered)); review = m
+                            let m = ReviewModel.live(env); m.beginExisting(Self.unsortedItems(filtered)); review = m
                         }.buttonStyle(.bordered).controlSize(.small)
                     }
                 }
@@ -85,7 +88,7 @@ struct WardrobeView: View {
             .navigationTitle("Wardrobe")
             .searchable(text: $filter.text, prompt: "Search name, brand, colour")
             .navigationDestination(for: UUID.self) { id in
-                if let item = items.first(where: { $0.id == id }) { ItemDetailView(item: item, store: store) }
+                if let item = items.first(where: { $0.id == id }) { ItemDetailView(item: item) }
             }
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
@@ -102,19 +105,23 @@ struct WardrobeView: View {
                 guard !new.isEmpty else { return }
                 let chosen = new
                 picked = []
-                let m = ReviewModel.live()
+                let m = ReviewModel.live(env)
                 m.begin(count: chosen.count) { i in try? await chosen[i].loadTransferable(type: Data.self) }
                 review = m
             }
             .fullScreenCover(isPresented: $showCamera, onDismiss: { review = fromCamera; fromCamera = nil }) {
                 CameraView { shots in
-                    let m = ReviewModel.live()
+                    let m = ReviewModel.live(env)
                     m.begin(count: shots.count, box: { shots[$0].box }) { shots[$0].data }
                     fromCamera = m
                 }
             }
-            .fullScreenCover(item: $review) { ReviewView(model: $0) }
-            .sheet(isPresented: $showSettings) { SettingsView() }
+            .fullScreenCover(item: $review, onDismiss: {
+                guard let ids = lastReview?.takeProductQueue(), !ids.isEmpty else { return }
+                Task { await shot.makeQueued(ids, context: context) }
+            }) { m in ReviewView(model: m).onAppear { lastReview = m } }
+            .productShotSheet(shot)
+            .sheet(isPresented: $showSettings) { SettingsView(env: env) }
         }
     }
 }
@@ -123,9 +130,9 @@ struct ItemCell: View {
     let item: Item
     let store: ImageStore
     var body: some View {
-        FileImage(url: store.url(for: item.displayFile, id: item.id))
+        FileImage(url: store.url(for: ImageStore.productName, id: item.id), fallback: store.url(for: item.displayFile, id: item.id))   // product photo if made
             .frame(maxWidth: .infinity).aspectRatio(4.0 / 5.0, contentMode: .fit)   // catalogue images are 1200x1500
-            .background(Color(red: 244 / 255, green: 244 / 255, blue: 242 / 255))
+            .background(Color.catalogueGrey)
             .clipShape(RoundedRectangle(cornerRadius: 10))
             .overlay(RoundedRectangle(cornerRadius: 10).stroke(.quaternary))
             .overlay(alignment: .topTrailing) {

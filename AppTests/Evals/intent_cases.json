@@ -1,0 +1,243 @@
+{
+  "passMarks": {
+    "sentences": "13 of 15 with correct occasion and dress code",
+    "followUps": "4 of 5"
+  },
+  "sentences": [
+    {
+      "id": "E-INT-01",
+      "sentence": "Office tomorrow, normal day",
+      "expectedOccasion": [
+        "office"
+      ],
+      "expectedDressCode": [
+        "smartCasual",
+        "businessCasual"
+      ],
+      "alsoExpect": []
+    },
+    {
+      "id": "E-INT-02",
+      "sentence": "Interview at a startup on Friday",
+      "expectedOccasion": [
+        "interview"
+      ],
+      "expectedDressCode": [
+        "businessCasual"
+      ],
+      "alsoExpect": []
+    },
+    {
+      "id": "E-INT-03",
+      "sentence": "Date night at a nice restaurant",
+      "expectedOccasion": [
+        "date"
+      ],
+      "expectedDressCode": [
+        "smartCasual"
+      ],
+      "alsoExpect": [
+        "timeOfDay: evening or night"
+      ]
+    },
+    {
+      "id": "E-INT-04",
+      "sentence": "My cousin's sangeet on Saturday",
+      "expectedOccasion": [
+        "weddingGuest"
+      ],
+      "expectedDressCode": [
+        "festive"
+      ],
+      "alsoExpect": [
+        "preferIndian"
+      ]
+    },
+    {
+      "id": "E-INT-05",
+      "sentence": "Diwali at a friend's place, evening, indoors, no crackers",
+      "expectedOccasion": [
+        "festival"
+      ],
+      "expectedDressCode": [
+        "festive",
+        "smartCasual"
+      ],
+      "alsoExpect": [
+        "timeOfDay: evening",
+        "setting: indoor",
+        "no fireworks flag"
+      ]
+    },
+    {
+      "id": "E-INT-06",
+      "sentence": "Diwali party, we'll burst crackers on the terrace",
+      "expectedOccasion": [
+        "festival"
+      ],
+      "expectedDressCode": [
+        "festive",
+        "smartCasual"
+      ],
+      "alsoExpect": [
+        "fireworks flag"
+      ]
+    },
+    {
+      "id": "E-INT-07",
+      "sentence": "Going to the temple in the morning",
+      "expectedOccasion": [
+        "puja"
+      ],
+      "expectedDressCode": [
+        "festive",
+        "smartCasual"
+      ],
+      "alsoExpect": [
+        "timeOfDay: day",
+        "religiousSite flag"
+      ]
+    },
+    {
+      "id": "E-INT-08",
+      "sentence": "Flight to Goa, then walking around all day",
+      "expectedOccasion": [
+        "travel"
+      ],
+      "expectedDressCode": [
+        "casual"
+      ],
+      "alsoExpect": [
+        "lotsOfWalking flag"
+      ]
+    },
+    {
+      "id": "E-INT-09",
+      "sentence": "Gym",
+      "expectedOccasion": [
+        "gym"
+      ],
+      "expectedDressCode": [
+        "athletic"
+      ],
+      "alsoExpect": []
+    },
+    {
+      "id": "E-INT-10",
+      "sentence": "Staying home today",
+      "expectedOccasion": [
+        "home"
+      ],
+      "expectedDressCode": [
+        "home",
+        "casual"
+      ],
+      "alsoExpect": []
+    },
+    {
+      "id": "E-INT-11",
+      "sentence": "College fest in the evening",
+      "expectedOccasion": [
+        "party"
+      ],
+      "expectedDressCode": [
+        "casual",
+        "party"
+      ],
+      "alsoExpect": [
+        "timeOfDay: evening"
+      ]
+    },
+    {
+      "id": "E-INT-12",
+      "sentence": "Friend's wedding reception",
+      "expectedOccasion": [
+        "weddingGuest"
+      ],
+      "expectedDressCode": [
+        "festive",
+        "formal"
+      ],
+      "alsoExpect": []
+    },
+    {
+      "id": "E-INT-13",
+      "sentence": "Coffee with a friend, it's really hot out",
+      "expectedOccasion": [
+        "casualDay"
+      ],
+      "expectedDressCode": [
+        "casual"
+      ],
+      "alsoExpect": [
+        "weatherFeel: hot"
+      ]
+    },
+    {
+      "id": "E-INT-14",
+      "sentence": "Dinner with my manager",
+      "expectedOccasion": [
+        "date",
+        "office"
+      ],
+      "expectedDressCode": [
+        "smartCasual",
+        "businessCasual"
+      ],
+      "alsoExpect": [
+        "timeOfDay: evening"
+      ]
+    },
+    {
+      "id": "E-INT-15",
+      "sentence": "House party tonight, nothing black",
+      "expectedOccasion": [
+        "party"
+      ],
+      "expectedDressCode": [
+        "party",
+        "smartCasual"
+      ],
+      "alsoExpect": [
+        "avoid black"
+      ]
+    }
+  ],
+  "followUps": [
+    {
+      "id": "E-INT-F1",
+      "after": 5,
+      "message": "Make it more casual",
+      "expectedChange": "formality range lower",
+      "everythingElseKept": true
+    },
+    {
+      "id": "E-INT-F2",
+      "after": 5,
+      "message": "No chinos",
+      "expectedChange": "avoid has chinos",
+      "everythingElseKept": true
+    },
+    {
+      "id": "E-INT-F3",
+      "after": 3,
+      "message": "Actually it's outdoors",
+      "expectedChange": "setting outdoor",
+      "everythingElseKept": true
+    },
+    {
+      "id": "E-INT-F4",
+      "after": 1,
+      "message": "It's going to rain",
+      "expectedChange": "weatherFeel rainy",
+      "everythingElseKept": true
+    },
+    {
+      "id": "E-INT-F5",
+      "after": 4,
+      "message": "Not Indian wear this time",
+      "expectedChange": "preferIndian false",
+      "everythingElseKept": true
+    }
+  ]
+}

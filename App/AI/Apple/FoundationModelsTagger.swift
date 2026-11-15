@@ -4,16 +4,15 @@ import FoundationModels
 import StyleEngine
 import os
 
-/// Calls A, B and C on the on-device model: each a fresh session, greedy, cut-out on white at 768 px (same shape as the
+/// Apple adapter for `ItemTagger`: calls A, B and C on the on-device model: each a fresh session, greedy, cut-out on white at 768 px (same shape as the
 /// Sprint 0 spike). Call B's struct depends on the category from call A (`constructionFields(for:)`).
 /// Bump `version` when a prompt or a struct changes, then re-run E-TAG.
-final class FoundationModelsTagger: ItemTagger, TokenReporting, AvailabilityReporting {
+final class FoundationModelsTagger: ItemTagger, TokenReporting, AvailabilityReporting, ProviderReporting {
+    let providerName = AppleOnDeviceProvider.name
     let version = "fm-ondevice-2"
     private let tokens = OSAllocatedUnfairLock<Int?>(initialState: nil)
     var lastTokenCount: Int? { tokens.withLock { $0 } }
-    var unavailableReason: String? { SpikeTagger.unavailableReason() }
-
-    struct Unavailable: Error { let reason: String }
+    var unavailableReason: String? { AppleOnDeviceProvider.unavailableReason() }
 
     func identity(cutout: CGImage) async throws -> IdentityTags {
         try await call(IdentityTags.self, cutout, "You label one clothing item in a photo. Choose only from the allowed values.",
@@ -41,7 +40,7 @@ final class FoundationModelsTagger: ItemTagger, TokenReporting, AvailabilityRepo
     }
 
     private func call<T: Generable>(_ type: T.Type, _ cutout: CGImage, _ instructions: String, _ prompt: String) async throws -> T {
-        if let reason = unavailableReason { throw Unavailable(reason: reason) }
+        if let reason = unavailableReason { throw AIUnavailable(reason: reason) }
         guard let img = SpikeImage.onWhite(cutout, longSide: 768) else { throw SpikeCutoutError.render }
         tokens.withLock { $0 = nil }
         let session = LanguageModelSession(instructions: instructions)   // fresh context every call

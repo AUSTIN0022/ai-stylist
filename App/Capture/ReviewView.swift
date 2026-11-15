@@ -1,3 +1,4 @@
+import ImagePlayground
 import StyleEngine
 import SwiftData
 import SwiftUI
@@ -14,6 +15,8 @@ struct ReviewView: View {
     @State private var draft: ReviewModel.LabelDraft?   // shown once the scanner has dismissed
     @State private var labelMessage: String?
     @State private var preparingAdjust = false
+    @State private var makeProduct = false
+    @Environment(\.supportsImagePlayground) private var supportsImagePlayground
     @Query(sort: \Item.createdAt, order: .reverse) private var items: [Item]
 
     enum CameraKind: Identifiable {
@@ -23,17 +26,22 @@ struct ReviewView: View {
 
     var body: some View {
         NavigationStack {
-            TabView(selection: $selected) {
-                ForEach(model.unresolved) { p in page(p).tag(Optional(p.id)) }
+            Group {
+                if model.analysing { AnalysisProgress(model: model) } else {
+                    TabView(selection: $selected) {
+                        ForEach(model.unresolved) { p in page(p).tag(Optional(p.id)) }
+                    }
+                    .tabViewStyle(.page(indexDisplayMode: .never))
+                }
             }
-            .tabViewStyle(.page(indexDisplayMode: .never))
             .background(Color(.systemBackground))
-            .navigationTitle(selected.map { "\(model.position($0)) of \(model.photos.count)" } ?? "Review")
+            .navigationTitle(model.analysing ? "Working" : selected.map { "\(model.position($0)) of \(model.photos.count)" } ?? "Review")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar { ToolbarItem(placement: .cancellationAction) { Button("Close") { model.discardAll() } } }
         }
         .onAppear { model.logContext = context; if selected == nil { selected = model.unresolved.first?.id } }
-        .onChange(of: model.isFinished) { _, done in if done { dismiss() } }
+        .onChange(of: model.isFinished) { _, done in if done { dismiss() } }   // product photos run from the screen that opened the review
+        .onChange(of: model.analysing) { _, on in if !on { selected = model.unresolved.first?.id } }
         .fullScreenCover(item: $camera, onDismiss: { draft = model.labelDraft }) { kind in
             switch kind {
             case .retake(let id):
@@ -85,7 +93,11 @@ struct ReviewView: View {
                 // A saved item is never deleted from here: Skip leaves it as it was.
                 Button(p.existingID == nil ? "Discard" : "Skip", role: p.existingID == nil ? .destructive : nil) { resolve(p.id) { model.discard(p.id) } }
                 Spacer()
-                Button("Save") { resolve(p.id) { model.save(p.id, context: context) } }
+                Button("Save") {
+                    resolve(p.id) {
+                        model.save(p.id, context: context, makeProduct: makeProduct && supportsImagePlayground)
+                    }
+                }
                     .buttonStyle(.borderedProminent).disabled(p.processed == nil)
             }
             .buttonStyle(.bordered).padding(16)
@@ -113,10 +125,12 @@ struct ReviewView: View {
                 }
             }
             categoryQuestion(p)
-            if model.askColor(p) { colorQuestion(p) }
+            if model.askColor(p) { colorQuestion(p) } else { colourRow(p) }
             if model.askFit(p) { fitQuestion(p) }
             TagChips(model: model, photo: p)
             labelSection(p)
+            if supportsImagePlayground { Toggle("Make a product photo after saving", isOn: $makeProduct) }
+            else { Text(productShotUnavailableReason).font(.footnote).foregroundStyle(.secondary) }
         }
     }
 
@@ -154,6 +168,25 @@ struct ReviewView: View {
 
     @ViewBuilder private func chip(_ title: String, on: Bool, _ action: @escaping () -> Void) -> some View {
         if on { Button(title, action: action).buttonStyle(.borderedProminent) } else { Button(title, action: action).buttonStyle(.bordered) }
+    }
+
+    /// The colour as swatch and name; tap the name to pick another (the choice wins and is saved with the item).
+    private func colourRow(_ p: ReviewModel.Photo) -> some View {
+        let names = model.colorNames(p), hexes = p.processed?.hexColors ?? []
+        return HStack(spacing: 8) {
+            Text("Colour").font(.headline)
+            Spacer()
+            ForEach(Array(names.enumerated()), id: \.offset) { i, n in
+                if hexes.indices.contains(i) { Circle().fill(Color(hex: hexes[i])).frame(width: 22, height: 22).overlay(Circle().stroke(.quaternary)) }
+                if i == 0 {
+                    Menu {
+                        ForEach(ColorName.allCases, id: \.self) { c in
+                            Button { model.answerColor(p.id, c) } label: { if c == n { Label(c.displayName, systemImage: "checkmark") } else { Text(c.displayName) } }
+                        }
+                    } label: { Label(n.displayName, systemImage: "chevron.up.chevron.down").labelStyle(.titleAndIcon) }.buttonStyle(.bordered).controlSize(.small)
+                } else { Text(n.displayName).font(.footnote).foregroundStyle(.secondary) }
+            }
+        }
     }
 
     private func colorQuestion(_ p: ReviewModel.Photo) -> some View {
@@ -197,108 +230,4 @@ struct ReviewView: View {
     }
 }
 
-/// Cut-out on white with an original toggle.
-private struct CutoutPreview: View {
-    let store: ImageStore
-    let processed: ProcessedImages
-    @State private var original = false
-    var body: some View {
-        VStack(spacing: 8) {
-            FileImage(url: store.url(for: original ? processed.originalFile : processed.displayFile, id: processed.itemID), maxPixel: 1024)
-                .frame(maxWidth: .infinity).aspectRatio(original ? 3 / 4 : 1, contentMode: .fit)
-                .background(.white).clipShape(RoundedRectangle(cornerRadius: 16))
-                .overlay(RoundedRectangle(cornerRadius: 16).stroke(.quaternary))
-            Picker("View", selection: $original) { Text("Cut-out").tag(false); Text("Original").tag(true) }
-                .pickerStyle(.segmented)
-        }
-    }
-}
-
-/// The original with candidate bounds outlined: one tap re-cuts (review of an unclear photo).
-private struct CutoutPicker: View {
-    let model: ReviewModel
-    let photo: ReviewModel.Photo
-    @State private var image: CGImage?
-
-    var body: some View {
-        let pr = photo.processed!
-        VStack(spacing: 10) {
-            if let image {
-                let aspect = CGFloat(image.width) / CGFloat(image.height)
-                Image(decorative: image, scale: 1).resizable().scaledToFit()
-                    .overlay {
-                        GeometryReader { geo in
-                            ZStack(alignment: .topLeading) {
-                                ForEach(pr.cutoutResult?.candidates ?? [], id: \.index) { c in
-                                    Rectangle().stroke(Color.yellow, lineWidth: 2)
-                                        .frame(width: c.bounds.width * geo.size.width, height: c.bounds.height * geo.size.height)
-                                        .offset(x: c.bounds.minX * geo.size.width, y: c.bounds.minY * geo.size.height)
-                                }
-                            }
-                            .contentShape(Rectangle())
-                            .onTapGesture { loc in Task { await model.recut(photo.id, .tap(CGPoint(x: loc.x / geo.size.width, y: loc.y / geo.size.height))) } }
-                        }
-                    }
-                    .aspectRatio(aspect, contentMode: .fit)
-                    .accessibilityLabel("Original photo. Tap the item.")
-            } else { ProgressView().frame(height: 300) }
-        }
-        .task {
-            let u = model.store.url(for: pr.originalFile, id: pr.itemID)
-            image = await Task.detached { ImageCodec.thumbnail(at: u, maxPixel: 1024) }.value
-        }
-    }
-}
-
-private struct AdjustSheet: View {
-    let model: ReviewModel
-    let id: UUID
-    @Environment(\.dismiss) private var dismiss
-    @State private var image: CGImage?
-    var body: some View {
-        NavigationStack {
-            Group {
-                if let p = model.photo(id), let pr = p.processed {
-                    if let image, let res = pr.cutoutResult {
-                        AdjustCanvas(image: image, candidates: res.candidates, chosen: res.chosen, automatic: res.automaticChosen, error: p.error) { how in
-                            switch how {
-                            case .chosen(let c): await model.recut(id, .chosen(c))
-                            case .box(let b, let c): await model.recut(id, .box(b, chosen: c))
-                            }
-                        }
-                    } else if pr.cutoutResult == nil {
-                        ContentUnavailableView("Can't adjust this one", systemImage: "exclamationmark.triangle",
-                                               description: Text(p.error ?? "The item couldn't be found in the original photo. Retake it."))
-                    } else { ProgressView() }
-                }
-            }
-            .navigationTitle("Adjust cut-out").navigationBarTitleDisplayMode(.inline)
-            .toolbar { ToolbarItem(placement: .cancellationAction) { Button("Cancel") { dismiss() } } }
-        }
-        .task {
-            guard let pr = model.photo(id)?.processed else { return }
-            let u = model.store.url(for: pr.originalFile, id: pr.itemID)
-            image = await Task.detached { ImageCodec.thumbnail(at: u, maxPixel: 1600) }.value
-        }
-    }
-}
-
 extension UUID: @retroactive Identifiable { public var id: UUID { self } }
-
-private extension String { var nilIfEmpty: String? { isEmpty ? nil : self } }
-
-/// Read-only chips (review and item detail).
-struct LabelChips: View {
-    let label: LabelData
-    var body: some View {
-        let chips: [String] = [[label.brand, label.subBrand].compactMap { $0 }.joined(separator: " · ").nilIfEmpty, label.fabric?.displayName, label.fit?.displayName, label.size.map { "Size \($0)" },
-                               label.mrp.map { "MRP ₹\(Int($0))" }, label.salePrice.map { "Sale ₹\(Int($0))" },
-                               label.colour, label.styleCode.map { "Style \($0)" }, label.barcode.map { "Barcode \($0)" }].compactMap { $0 }
-        if chips.isEmpty { Text("Nothing read from the label.").font(.footnote).foregroundStyle(.secondary) }
-        else {
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack { ForEach(chips, id: \.self) { Text($0).font(.footnote).padding(.horizontal, 10).padding(.vertical, 6).background(.quaternary, in: Capsule()) } }
-            }
-        }
-    }
-}

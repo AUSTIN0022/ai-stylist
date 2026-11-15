@@ -24,3 +24,20 @@ import StyleEngine
     #expect(!ColorExtractor.classify(hex: "FFFFFF").ambiguous)
     #expect(ColorExtractor.extract(from: solid("0A0A0A")).ambiguous == [false])
 }
+
+// 15 Nov device test: white sneakers and a white tee read as "Silver" from room light.
+@Test func S2_FX01_coolLightNeutralsAreWhite() {
+    for hex in ["C4CED2", "CBD3D6", "D8DCDD"] { #expect(ColorExtractor.name(forHex: hex) == .white, Comment(rawValue: hex)) }
+}
+@Test func S2_FX01b_creamStaysCreamAndGreyIsGrey() {
+    #expect(ColorExtractor.name(forHex: "F2EAD8") == .cream)
+    #expect(ColorExtractor.name(forHex: "9A9A9A") == .grey)
+    #expect(ColorExtractor.name(forHex: "B4B4B4") == .grey)
+}
+@Test func S2_FX01c_neverAutoSilver() {
+    for v in stride(from: 0, through: 255, by: 5) {
+        let h = String(format: "%02X%02X%02X", v, v, v)
+        #expect(ColorExtractor.name(forHex: h) != .silver, Comment(rawValue: h))
+    }
+    #expect(ColorExtractor.name(forHex: "C0C0C0") != .silver)
+}

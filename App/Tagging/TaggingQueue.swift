@@ -129,6 +129,3 @@ actor TaggingQueue {
         }
     }
 }
-
-/// Where the app keeps its queue (set at launch). ReviewModel hands items it could not finish to it.
-@MainActor enum AppServices { static var tagging: TaggingQueue? }

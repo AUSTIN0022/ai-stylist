@@ -23,6 +23,12 @@ public enum Catalogue {
 
         let up = PixelBuffer(upright)
         guard let box = alphaBounds(up), let crop = upright.cropping(to: box) else { return canvas(nil) }
+        return frame(crop)
+    }
+
+    /// An already clean opaque image (a generated product photo) on the same canvas, margins and shadow as `render`; no colour changes.
+    public static func frame(_ crop: CGImage) -> CGImage {
+        let box = CGRect(x: 0, y: 0, width: crop.width, height: crop.height)
         let s = min(fillFraction * Double(canvasWidth) / Double(box.width), fillFraction * Double(canvasHeight) / Double(box.height))
         let tw = max(1, Int((Double(box.width) * s).rounded())), th = max(1, Int((Double(box.height) * s).rounded()))
         let gw = tw + 2 * pad, gh = th + 2 * pad
@@ -33,6 +39,7 @@ public enum Catalogue {
         guard let placed = ctx.makeImage() else { return canvas(nil) }
         return canvas(cleanEdge(PixelBuffer(placed)))
     }
+
 
     // MARK: Upright
 
@@ -304,5 +311,49 @@ public enum Catalogue {
             }
         }
         return PixelBuffer(width: W, height: H, data: out).makeImage()!
+    }
+}
+
+extension Catalogue {
+    static let productMargin = 0.09
+
+    /// A generated product photo on the catalogue canvas WITHOUT a re-cut (a second cut-out looks jagged): crop 4:5 centred on the
+    /// subject (`subject`: normalised bounds) with a 9% margin, scale to 1200x1500 (areas outside the photo are padded with the
+    /// backdrop colour, so the subject is never clipped), then per-channel gain so the backdrop (median of the photo's border) becomes #F4F4F2.
+    /// Edges stay as generated. Clamped.
+    static func productFrame(_ image: CGImage, subject: CGRect) -> CGImage {
+        let iw = Double(image.width), ih = Double(image.height)
+        let s = CGRect(x: subject.minX * iw, y: subject.minY * ih, width: subject.width * iw, height: subject.height * ih)
+        let k = 1 + 2 * productMargin
+        let cw = max(s.width * k, s.height * k * 4 / 5), ch = cw * 5 / 4
+        var x0 = s.midX - cw / 2, y0 = s.midY - ch / 2
+        // Slide the crop back inside the photo when it fits; otherwise it overhangs and the overhang is padded.
+        if cw <= iw { x0 = min(max(0, x0), iw - cw) }
+        if ch <= ih { y0 = min(max(0, y0), ih - ch) }
+        let bg = borderColour(image)
+        let W = canvasWidth, H = canvasHeight, sc = Double(W) / cw
+        guard let ctx = CGContext(data: nil, width: W, height: H, bitsPerComponent: 8, bytesPerRow: 0, space: sRGBSpace,
+                                  bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue) else { return image }
+        ctx.setFillColor(red: bg.0 / 255, green: bg.1 / 255, blue: bg.2 / 255, alpha: 1)
+        ctx.fill(CGRect(x: 0, y: 0, width: W, height: H))
+        ctx.interpolationQuality = .high
+        ctx.draw(image, in: CGRect(x: -x0 * sc, y: Double(H) - (-y0 + ih) * sc, width: iw * sc, height: ih * sc))
+        guard let canvas = ctx.makeImage() else { return image }
+        var pb = PixelBuffer(canvas)
+        let target = [Double(background.r), Double(background.g), Double(background.b)]
+        let gain = [bg.0, bg.1, bg.2].enumerated().map { min(1.6, max(0.6, target[$0.offset] / max(1, $0.element))) }
+        for i in 0..<W * H { for c in 0..<3 { pb.data[i * 4 + c] = UInt8(min(255, (Double(pb.data[i * 4 + c]) * gain[c]).rounded())) } }
+        return pb.makeImage() ?? canvas
+    }
+
+    /// Median colour of the outer 2% frame of the photo (the backdrop), 0...255 per channel.
+    static func borderColour(_ image: CGImage) -> (Double, Double, Double) {
+        let p = PixelBuffer(image, maxSide: 256), t = max(1, Int(Double(min(p.width, p.height)) * 0.02))
+        var ch: [[UInt8]] = [[], [], []]
+        for y in 0..<p.height { for x in 0..<p.width where x < t || y < t || x >= p.width - t || y >= p.height - t {
+            for c in 0..<3 { ch[c].append(p.data[(y * p.width + x) * 4 + c]) }
+        } }
+        let m = ch.map { Double($0.sorted()[$0.count / 2]) }
+        return (m[0], m[1], m[2])
     }
 }

@@ -40,8 +40,11 @@ public enum ColorExtractor {
         let chroma = (c.a * c.a + c.b * c.b).squareRoot()
         if c.l < 22, chroma < 12 { return (.black, c.l >= 12 || chroma >= 6) }   // ambiguous only near the boundary
         if c.l > 80, chroma < 6 { return (.white, c.l <= 90 || chroma >= 4) }   // indoor light reads white at L 84-86
+        // Cool or neutral light tones (room light on white clothes, ~#C4CED2) are white, not silver; warm ones (cream, beige) are not (b* < 5).
+        if c.l > 75, chroma < 14, c.b < 5 { return (.white, true) }
         // A dark but coloured pixel (dark brown, dark green) is not charcoal.
-        let d = references.filter { !(c.l < 30 && chroma >= 12 && $0.0 == .charcoal) }.map { ($0.0, $0.1.dist(c)) }.sorted { $0.1 < $1.1 }
+        // Silver is never picked automatically (it stays in the colour list for the user).
+        let d = references.filter { $0.0 != .silver && !(c.l < 30 && chroma >= 12 && $0.0 == .charcoal) }.map { ($0.0, $0.1.dist(c)) }.sorted { $0.1 < $1.1 }
         return (d[0].0, d[1].1 - d[0].1 < 6)
     }
 

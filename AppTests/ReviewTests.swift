@@ -299,3 +299,85 @@ private func tags(_ c: StyleEngine.Category, _ s: Subcategory) -> IdentityTags {
     #expect(saved === item && n == 1 && saved.label?.brand == "Westside" && saved.tags.fit == .slim)
     #expect(try r.items().count == 1)
 }
+
+// MARK: Fix round 15 Nov (FX02...FX06)
+
+@MainActor @Test func S2_FX03_fitNotAskedForShoes() async throws {
+    let shoes = FakeTagger(result: .success(IdentityTags(category: .footwear, subcategory: .sneakers, styleOrigin: .western)))
+    let r = try Rig(tagger: shoes); defer { r.cleanup() }
+    await r.start(1)
+    #expect(r.model.photos[0].ai?.category == .footwear && !r.model.askFit(r.model.photos[0]))
+    let r2 = try Rig(tagger: FakeTagger()); defer { r2.cleanup() }
+    await r2.start(1)
+    #expect(r2.model.askFit(r2.model.photos[0]))   // a shirt still gets the question
+}
+
+@MainActor @Test func S2_FX02_colourChoiceSticksOnReviewAndOnReviewAgain() async throws {
+    let r = try Rig(hex: "C4CED2"); defer { r.cleanup() }
+    await r.start(1)
+    let id = r.model.photos[0].id
+    r.model.answerColor(id, .grey)
+    #expect(r.model.colorNames(r.model.photos[0]) == [.grey])
+    let item = try #require(r.model.save(id, context: r.context))
+    #expect(item.colorNames.first == "grey")
+    item.setColour(.beige, context: r.context)   // item detail
+    #expect(item.colorNames.first == "beige")
+    let again = r.makeModel(); again.beginExisting([item])
+    #expect(again.colorNames(again.photos[0]) == [.beige])
+}
+
+@MainActor @Test func S2_FX02b_colourChangeRenamesAutoNamedItem() async throws {
+    let r = try Rig(tagger: FakeTagger()); defer { r.cleanup() }
+    await r.start(1)
+    let item = try #require(r.model.save(r.model.photos[0].id, context: r.context))
+    let before = item.name
+    item.setColour(.red, context: r.context)
+    #expect(item.name != before && item.name.lowercased().contains("red"))
+    item.name = "My shirt"; item.setColour(.navy, context: r.context)
+    #expect(item.name == "My shirt")
+}
+
+@MainActor @Test func S2_FX05_productPhotoQueueFollowsSave() async throws {
+    let r = try Rig(); defer { r.cleanup() }
+    await r.start(3)
+    let ids = r.model.photos.map(\.id)
+    let a = try #require(r.model.save(ids[0], context: r.context, makeProduct: true))
+    r.model.save(ids[1], context: r.context)
+    let c = try #require(r.model.save(ids[2], context: r.context, makeProduct: true))
+    #expect(r.model.takeProductQueue() == [a.id, c.id])
+    #expect(r.model.takeProductQueue().isEmpty)
+}
+
+@MainActor @Test func S2_FX06_reviewOpensOnlyWhenTaggingIsDone() async throws {
+    let r = try Rig(tagger: FakeTagger()); defer { r.cleanup() }
+    r.model.begin(count: 2) { _ in photoData }
+    #expect(r.model.analysing)
+    await r.model.idle()
+    #expect(!r.model.analysing)
+    #expect(r.model.photos.allSatisfy { $0.tagState == .done && $0.ai != nil })
+}
+
+@MainActor @Test func S2_FX06b_hungModelTimesOutAndReviewOpensWithWhatThereIs() async throws {
+    let t = FakeTagger(); t.hangOnIdentityCall = 1
+    let r = try Rig(tagger: t); defer { r.cleanup() }
+    r.model.tagTimeout = .milliseconds(80)
+    await r.start(2)
+    #expect(!r.model.analysing)
+    #expect(r.model.photos[0].ai == nil && { if case .failed = r.model.photos[0].tagState { true } else { false } }())
+    #expect(r.model.photos[1].tagState == .done && r.model.photos[0].status == .ready)
+}
+
+@MainActor @Test func S2_FX06c_unavailableModelStillOpensReview() async throws {
+    let t = FakeTagger(); t.unavailableReason = "off"; t.identityResult = .failure(FakeTagger.Boom())
+    let r = try Rig(tagger: t); defer { r.cleanup() }
+    await r.start(1)
+    #expect(!r.model.analysing && r.model.photos[0].status == .ready)
+}
+
+@Test func S2_FX04_taggingRunDropsAthleticFromLeatherSneakers() async throws {
+    let t = FakeTagger(result: .success(IdentityTags(category: .footwear, subcategory: .sneakers, styleOrigin: .western)))
+    t.constructionResult.fabric = .leather; t.constructionResult.closedToe = true
+    t.usageResult.dressCodes = [.casual, .athletic]
+    let raw = try await TaggingRun.run(tagger: t, cutout: flat("FFFFFF"), sink: { _ in })
+    #expect(raw.dressCodes == [.casual])
+}

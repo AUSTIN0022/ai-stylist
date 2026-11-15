@@ -1,0 +1,1522 @@
+{
+ "items": [
+  {
+   "colors": [
+    "rust"
+   ],
+   "id": "6a216eac-9ba7-503f-ab8e-f38c8312b487",
+   "key": "shirt_rust_mandarin",
+   "lastWornAt": null,
+   "name": "Rust mandarin-collar shirt",
+   "setGroupId": null,
+   "tags": {
+    "caption": "Rust cotton-linen shirt, mandarin collar, relaxed",
+    "category": "top",
+    "collar": "mandarin",
+    "dressCodes": [
+     "smartCasual",
+     "festive"
+    ],
+    "fabric": "cottonLinen",
+    "fit": "relaxed",
+    "formality": 3,
+    "length": "regular",
+    "pattern": "solid",
+    "seasons": [
+     "summer",
+     "monsoon"
+    ],
+    "setRole": "none",
+    "sleeve": "long",
+    "statement": "medium",
+    "styleOrigin": "western",
+    "subcategory": "shirt",
+    "warmth": 1
+   }
+  },
+  {
+   "colors": [
+    "green"
+   ],
+   "id": "8840e5fa-a29b-527e-a6ae-03d972c35ed7",
+   "key": "shirt_forest_green_linen",
+   "lastWornAt": null,
+   "name": "Forest green cotton-linen shirt",
+   "setGroupId": null,
+   "tags": {
+    "caption": "Forest green cotton-linen shirt, spread collar",
+    "category": "top",
+    "collar": "spread",
+    "dressCodes": [
+     "casual",
+     "smartCasual"
+    ],
+    "fabric": "cottonLinen",
+    "fit": "relaxed",
+    "formality": 3,
+    "length": "regular",
+    "pattern": "solid",
+    "seasons": [
+     "summer",
+     "monsoon"
+    ],
+    "setRole": "none",
+    "sleeve": "long",
+    "statement": "plain",
+    "styleOrigin": "western",
+    "subcategory": "shirt",
+    "warmth": 1
+   }
+  },
+  {
+   "colors": [
+    "lightBlue"
+   ],
+   "id": "1e8e44a2-564b-5149-a5e2-c8cdb164f913",
+   "key": "shirt_light_blue_oxford",
+   "lastWornAt": null,
+   "name": "Light blue oxford shirt",
+   "setGroupId": null,
+   "tags": {
+    "caption": "Light blue oxford shirt, button-down collar",
+    "category": "top",
+    "collar": "buttonDown",
+    "dressCodes": [
+     "smartCasual",
+     "businessCasual"
+    ],
+    "fabric": "cotton",
+    "fit": "regular",
+    "formality": 4,
+    "length": "regular",
+    "pattern": "textured",
+    "seasons": [
+     "summer",
+     "monsoon",
+     "winter"
+    ],
+    "setRole": "none",
+    "sleeve": "long",
+    "statement": "plain",
+    "styleOrigin": "western",
+    "subcategory": "shirt",
+    "warmth": 1
+   }
+  },
+  {
+   "colors": [
+    "navy"
+   ],
+   "id": "fea9c8bb-4a64-527c-9de4-339710efefac",
+   "key": "shirt_navy_linen_blend",
+   "lastWornAt": null,
+   "name": "Navy linen-blend shirt",
+   "setGroupId": null,
+   "tags": {
+    "caption": "Navy linen-blend shirt, spread collar",
+    "category": "top",
+    "collar": "spread",
+    "dressCodes": [
+     "smartCasual",
+     "businessCasual"
+    ],
+    "fabric": "cottonLinen",
+    "fit": "regular",
+    "formality": 3,
+    "length": "regular",
+    "pattern": "solid",
+    "seasons": [
+     "summer",
+     "monsoon"
+    ],
+    "setRole": "none",
+    "sleeve": "long",
+    "statement": "plain",
+    "styleOrigin": "western",
+    "subcategory": "shirt",
+    "warmth": 1
+   }
+  },
+  {
+   "colors": [
+    "rust",
+    "cream",
+    "navy"
+   ],
+   "id": "c2ca3bac-a80f-5b02-8e65-7aac17cbd05c",
+   "key": "shirt_terracotta_check",
+   "lastWornAt": null,
+   "name": "Terracotta check shirt",
+   "setGroupId": null,
+   "tags": {
+    "caption": "Terracotta check cotton-linen shirt, the busiest piece",
+    "category": "top",
+    "collar": "spread",
+    "dressCodes": [
+     "casual",
+     "smartCasual"
+    ],
+    "fabric": "cottonLinen",
+    "fit": "regular",
+    "formality": 2,
+    "length": "regular",
+    "pattern": "check",
+    "seasons": [
+     "summer",
+     "monsoon"
+    ],
+    "setRole": "none",
+    "sleeve": "long",
+    "statement": "medium",
+    "styleOrigin": "western",
+    "subcategory": "shirt",
+    "warmth": 1
+   }
+  },
+  {
+   "colors": [
+    "brown"
+   ],
+   "id": "0def1a7a-19a0-571a-affd-964ce7f2e663",
+   "key": "shirt_brown_linen",
+   "lastWornAt": null,
+   "name": "Brown linen shirt",
+   "setGroupId": null,
+   "tags": {
+    "caption": "Brown linen shirt, loose and slightly boxy",
+    "category": "top",
+    "collar": "spread",
+    "dressCodes": [
+     "casual",
+     "smartCasual"
+    ],
+    "fabric": "cottonLinen",
+    "fit": "loose",
+    "formality": 2,
+    "length": "regular",
+    "pattern": "solid",
+    "seasons": [
+     "summer",
+     "monsoon"
+    ],
+    "setRole": "none",
+    "sleeve": "long",
+    "statement": "plain",
+    "styleOrigin": "western",
+    "subcategory": "shirt",
+    "warmth": 1
+   }
+  },
+  {
+   "colors": [
+    "white"
+   ],
+   "id": "ec320fca-b4a5-586b-acb3-713160551159",
+   "key": "tee_white_slim",
+   "lastWornAt": null,
+   "name": "White slim-fit tee",
+   "setGroupId": null,
+   "tags": {
+    "caption": "White slim crew tee, base layer",
+    "category": "top",
+    "collar": "crew",
+    "dressCodes": [
+     "home",
+     "casual"
+    ],
+    "fabric": "jersey",
+    "fit": "slim",
+    "formality": 2,
+    "length": "regular",
+    "pattern": "solid",
+    "seasons": [
+     "summer",
+     "monsoon",
+     "winter"
+    ],
+    "setRole": "none",
+    "sleeve": "short",
+    "statement": "plain",
+    "styleOrigin": "western",
+    "subcategory": "tshirt",
+    "warmth": 1
+   }
+  },
+  {
+   "colors": [
+    "black"
+   ],
+   "id": "eae390b7-53fb-5376-b44e-12616a0e76b3",
+   "key": "tee_black_slim",
+   "lastWornAt": null,
+   "name": "Black slim-fit tee",
+   "setGroupId": null,
+   "tags": {
+    "caption": "Black slim crew tee, base layer",
+    "category": "top",
+    "collar": "crew",
+    "dressCodes": [
+     "home",
+     "casual"
+    ],
+    "fabric": "jersey",
+    "fit": "slim",
+    "formality": 2,
+    "length": "regular",
+    "pattern": "solid",
+    "seasons": [
+     "summer",
+     "monsoon",
+     "winter"
+    ],
+    "setRole": "none",
+    "sleeve": "short",
+    "statement": "plain",
+    "styleOrigin": "western",
+    "subcategory": "tshirt",
+    "warmth": 1
+   }
+  },
+  {
+   "colors": [
+    "navy"
+   ],
+   "id": "dd7cca97-9cf1-5c4c-bbba-ebd736d5895d",
+   "key": "tee_navy_textured",
+   "lastWornAt": null,
+   "name": "Navy textured t-shirt",
+   "setGroupId": null,
+   "tags": {
+    "caption": "Navy textured relaxed tee",
+    "category": "top",
+    "collar": "crew",
+    "dressCodes": [
+     "casual",
+     "smartCasual"
+    ],
+    "fabric": "jersey",
+    "fit": "relaxed",
+    "formality": 2,
+    "length": "regular",
+    "pattern": "textured",
+    "seasons": [
+     "summer",
+     "monsoon",
+     "winter"
+    ],
+    "setRole": "none",
+    "sleeve": "short",
+    "statement": "plain",
+    "styleOrigin": "western",
+    "subcategory": "tshirt",
+    "warmth": 1
+   }
+  },
+  {
+   "colors": [
+    "green"
+   ],
+   "id": "0dfa6f71-a229-5221-a9a6-1d05e8a80466",
+   "key": "tee_green_graphic",
+   "lastWornAt": null,
+   "name": "Bottle green graffiti-print t-shirt",
+   "setGroupId": null,
+   "tags": {
+    "caption": "Bottle green graffiti-print tee",
+    "category": "top",
+    "collar": "crew",
+    "dressCodes": [
+     "casual"
+    ],
+    "fabric": "jersey",
+    "fit": "relaxed",
+    "formality": 1,
+    "length": "regular",
+    "pattern": "graphic",
+    "seasons": [
+     "summer",
+     "monsoon",
+     "winter"
+    ],
+    "setRole": "none",
+    "sleeve": "short",
+    "statement": "statement",
+    "styleOrigin": "western",
+    "subcategory": "tshirt",
+    "warmth": 1
+   }
+  },
+  {
+   "colors": [
+    "black"
+   ],
+   "id": "73f266fc-f194-5900-b504-f77d889e67f7",
+   "key": "tee_black_graphic",
+   "lastWornAt": null,
+   "name": "Black graffiti-print t-shirt",
+   "setGroupId": null,
+   "tags": {
+    "caption": "Black graffiti-print tee",
+    "category": "top",
+    "collar": "crew",
+    "dressCodes": [
+     "casual"
+    ],
+    "fabric": "jersey",
+    "fit": "relaxed",
+    "formality": 1,
+    "length": "regular",
+    "pattern": "graphic",
+    "seasons": [
+     "summer",
+     "monsoon",
+     "winter"
+    ],
+    "setRole": "none",
+    "sleeve": "short",
+    "statement": "statement",
+    "styleOrigin": "western",
+    "subcategory": "tshirt",
+    "warmth": 1
+   }
+  },
+  {
+   "colors": [
+    "black"
+   ],
+   "id": "9db82ae8-25a0-5d90-906d-d8de8d1970ac",
+   "key": "pants_black_jeans",
+   "lastWornAt": null,
+   "name": "Black jeans",
+   "setGroupId": null,
+   "tags": {
+    "caption": "Black relaxed straight jeans",
+    "category": "bottom",
+    "dressCodes": [
+     "casual",
+     "smartCasual",
+     "party"
+    ],
+    "fabric": "denim",
+    "fit": "relaxed",
+    "formality": 2,
+    "length": "full",
+    "pattern": "solid",
+    "seasons": [
+     "summer",
+     "monsoon",
+     "winter"
+    ],
+    "setRole": "none",
+    "statement": "plain",
+    "styleOrigin": "western",
+    "subcategory": "jeans",
+    "warmth": 2
+   }
+  },
+  {
+   "colors": [
+    "black"
+   ],
+   "id": "bb50b017-07fc-59eb-8fab-b0381f2d5494",
+   "key": "pants_black_chinos_straight",
+   "lastWornAt": null,
+   "name": "Black chinos, straight fit",
+   "setGroupId": null,
+   "tags": {
+    "caption": "Black cotton-twill chinos, straight and clean",
+    "category": "bottom",
+    "dressCodes": [
+     "casual",
+     "smartCasual",
+     "businessCasual",
+     "party",
+     "festive"
+    ],
+    "fabric": "twill",
+    "fit": "regular",
+    "formality": 4,
+    "length": "full",
+    "pattern": "solid",
+    "seasons": [
+     "summer",
+     "monsoon",
+     "winter"
+    ],
+    "setRole": "none",
+    "statement": "plain",
+    "styleOrigin": "western",
+    "subcategory": "chinos",
+    "warmth": 2
+   }
+  },
+  {
+   "colors": [
+    "black"
+   ],
+   "id": "12fae424-cd9b-5eff-8394-df88933a1fa9",
+   "key": "pants_black_chinos_relaxed",
+   "lastWornAt": null,
+   "name": "Black chinos, relaxed fit",
+   "setGroupId": null,
+   "tags": {
+    "caption": "Black cotton-twill chinos, relaxed, everyday pair",
+    "category": "bottom",
+    "dressCodes": [
+     "casual",
+     "smartCasual",
+     "businessCasual",
+     "party",
+     "festive"
+    ],
+    "fabric": "twill",
+    "fit": "relaxed",
+    "formality": 3,
+    "length": "full",
+    "pattern": "solid",
+    "seasons": [
+     "summer",
+     "monsoon",
+     "winter"
+    ],
+    "setRole": "none",
+    "statement": "plain",
+    "styleOrigin": "western",
+    "subcategory": "chinos",
+    "warmth": 2
+   }
+  },
+  {
+   "colors": [
+    "grey"
+   ],
+   "id": "f2e502c9-d1d8-5921-9d70-d93ecc82c3c5",
+   "key": "pants_grey_loose",
+   "lastWornAt": null,
+   "name": "Grey loose jeans",
+   "setGroupId": null,
+   "tags": {
+    "caption": "Washed slate grey loose wide-leg jeans",
+    "category": "bottom",
+    "dressCodes": [
+     "casual"
+    ],
+    "fabric": "denim",
+    "fit": "loose",
+    "formality": 2,
+    "length": "full",
+    "pattern": "solid",
+    "seasons": [
+     "summer",
+     "monsoon",
+     "winter"
+    ],
+    "setRole": "none",
+    "statement": "plain",
+    "styleOrigin": "western",
+    "subcategory": "jeans",
+    "warmth": 2
+   }
+  },
+  {
+   "colors": [
+    "beige"
+   ],
+   "id": "86683c73-53dc-54b3-a563-2274a89a198d",
+   "key": "pants_beige_cream_relaxed",
+   "lastWornAt": null,
+   "name": "Beige / cream relaxed jeans",
+   "setGroupId": null,
+   "tags": {
+    "caption": "Cream-leaning beige relaxed jeans",
+    "category": "bottom",
+    "dressCodes": [
+     "casual",
+     "smartCasual"
+    ],
+    "fabric": "denim",
+    "fit": "relaxed",
+    "formality": 2,
+    "length": "full",
+    "pattern": "solid",
+    "seasons": [
+     "summer",
+     "monsoon",
+     "winter"
+    ],
+    "setRole": "none",
+    "statement": "plain",
+    "styleOrigin": "western",
+    "subcategory": "jeans",
+    "warmth": 2
+   }
+  },
+  {
+   "colors": [
+    "brown"
+   ],
+   "id": "cff0e339-f96e-582f-9fdc-48fcf60c5fbb",
+   "key": "pants_brown_linen",
+   "lastWornAt": null,
+   "name": "Brown mocha linen trousers",
+   "setGroupId": null,
+   "tags": {
+    "caption": "Mocha brown relaxed linen trousers",
+    "category": "bottom",
+    "dressCodes": [
+     "casual",
+     "smartCasual",
+     "festive"
+    ],
+    "fabric": "linen",
+    "fit": "relaxed",
+    "formality": 3,
+    "length": "full",
+    "pattern": "solid",
+    "seasons": [
+     "summer",
+     "monsoon"
+    ],
+    "setRole": "none",
+    "statement": "plain",
+    "styleOrigin": "western",
+    "subcategory": "trousers",
+    "warmth": 1
+   }
+  },
+  {
+   "colors": [
+    "tan"
+   ],
+   "id": "63a604bf-c74a-5498-8c0c-a38c1f910794",
+   "key": "pants_taupe_chinos",
+   "lastWornAt": null,
+   "name": "Taupe chinos",
+   "setGroupId": null,
+   "tags": {
+    "caption": "Taupe cotton-twill chinos",
+    "category": "bottom",
+    "dressCodes": [
+     "casual",
+     "smartCasual",
+     "businessCasual"
+    ],
+    "fabric": "twill",
+    "fit": "regular",
+    "formality": 3,
+    "length": "full",
+    "pattern": "solid",
+    "seasons": [
+     "summer",
+     "monsoon",
+     "winter"
+    ],
+    "setRole": "none",
+    "statement": "plain",
+    "styleOrigin": "western",
+    "subcategory": "chinos",
+    "warmth": 2
+   }
+  },
+  {
+   "colors": [
+    "navy"
+   ],
+   "id": "09e27e5a-ab71-5b1b-8b00-f70548815ef0",
+   "key": "pants_cord_navy",
+   "lastWornAt": null,
+   "name": "Navy corduroy trousers",
+   "setGroupId": null,
+   "tags": {
+    "caption": "Very dark navy fine-wale corduroy, wide leg",
+    "category": "bottom",
+    "dressCodes": [
+     "casual",
+     "smartCasual"
+    ],
+    "fabric": "corduroy",
+    "fit": "relaxed",
+    "formality": 3,
+    "length": "full",
+    "pattern": "textured",
+    "seasons": [
+     "winter"
+    ],
+    "setRole": "none",
+    "statement": "plain",
+    "styleOrigin": "western",
+    "subcategory": "trousers",
+    "warmth": 2
+   }
+  },
+  {
+   "colors": [
+    "olive"
+   ],
+   "id": "a0b40ac2-20f8-565d-bdfd-ebfcacc64fe2",
+   "key": "pants_cord_olive",
+   "lastWornAt": null,
+   "name": "Olive corduroy trousers",
+   "setGroupId": null,
+   "tags": {
+    "caption": "Olive fine-wale corduroy, wider leg, pleated",
+    "category": "bottom",
+    "dressCodes": [
+     "casual",
+     "smartCasual"
+    ],
+    "fabric": "corduroy",
+    "fit": "relaxed",
+    "formality": 3,
+    "length": "full",
+    "pattern": "textured",
+    "seasons": [
+     "winter"
+    ],
+    "setRole": "none",
+    "statement": "plain",
+    "styleOrigin": "western",
+    "subcategory": "trousers",
+    "warmth": 2
+   }
+  },
+  {
+   "colors": [
+    "navy"
+   ],
+   "id": "08043ca2-8844-5e8d-8ada-8049404a45bb",
+   "key": "pants_indigo_straight",
+   "lastWornAt": null,
+   "name": "Dark indigo regular-fit jeans",
+   "setGroupId": null,
+   "tags": {
+    "caption": "Dark indigo rinse regular straight jeans",
+    "category": "bottom",
+    "dressCodes": [
+     "casual",
+     "smartCasual",
+     "party"
+    ],
+    "fabric": "denim",
+    "fit": "regular",
+    "formality": 2,
+    "length": "full",
+    "pattern": "solid",
+    "seasons": [
+     "summer",
+     "monsoon",
+     "winter"
+    ],
+    "setRole": "none",
+    "statement": "plain",
+    "styleOrigin": "western",
+    "subcategory": "jeans",
+    "warmth": 2
+   }
+  },
+  {
+   "colors": [
+    "cream",
+    "tan"
+   ],
+   "id": "e9122c99-d856-5016-8253-5e6f46e03e5e",
+   "key": "shoes_white_gum_sneakers",
+   "lastWornAt": null,
+   "name": "Cream leather gum-sole sneakers",
+   "setGroupId": null,
+   "tags": {
+    "caption": "Cream leather terrace-style sneakers, gum sole",
+    "category": "footwear",
+    "closedToe": true,
+    "dressCodes": [
+     "casual",
+     "smartCasual",
+     "festive",
+     "party"
+    ],
+    "fabric": "leather",
+    "formality": 3,
+    "pattern": "solid",
+    "seasons": [
+     "summer",
+     "monsoon",
+     "winter"
+    ],
+    "setRole": "none",
+    "statement": "plain",
+    "styleOrigin": "western",
+    "subcategory": "sneakers",
+    "warmth": 1
+   }
+  },
+  {
+   "colors": [
+    "black"
+   ],
+   "id": "00ac1b5c-baed-54d5-ab9e-bf7aea222715",
+   "key": "shoes_black_sambas",
+   "lastWornAt": null,
+   "name": "Black Adidas Sambas",
+   "setGroupId": null,
+   "tags": {
+    "caption": "Black Sambas, streetwear leaning",
+    "category": "footwear",
+    "closedToe": true,
+    "dressCodes": [
+     "casual"
+    ],
+    "fabric": "suede",
+    "formality": 2,
+    "pattern": "solid",
+    "seasons": [
+     "summer",
+     "monsoon",
+     "winter"
+    ],
+    "setRole": "none",
+    "statement": "plain",
+    "styleOrigin": "western",
+    "subcategory": "sneakers",
+    "warmth": 1
+   }
+  },
+  {
+   "colors": [
+    "white"
+   ],
+   "id": "aa2581ff-cad2-5f1d-bb6a-e4c94e730443",
+   "key": "shoes_white_af1",
+   "lastWornAt": null,
+   "name": "White Nike Air Force 1-style sneakers",
+   "setGroupId": null,
+   "tags": {
+    "caption": "All-white chunky sneakers",
+    "category": "footwear",
+    "closedToe": true,
+    "dressCodes": [
+     "casual"
+    ],
+    "fabric": "leather",
+    "formality": 2,
+    "pattern": "solid",
+    "seasons": [
+     "summer",
+     "monsoon",
+     "winter"
+    ],
+    "setRole": "none",
+    "statement": "plain",
+    "styleOrigin": "western",
+    "subcategory": "sneakers",
+    "warmth": 1
+   }
+  },
+  {
+   "colors": [
+    "black"
+   ],
+   "id": "752daed1-b21a-555c-8385-6bb10145b2aa",
+   "key": "shoes_black_chelsea",
+   "lastWornAt": null,
+   "name": "Black Chelsea boots",
+   "setGroupId": null,
+   "tags": {
+    "caption": "Black suede Chelsea boots, lugged sole",
+    "category": "footwear",
+    "closedToe": true,
+    "dressCodes": [
+     "smartCasual",
+     "businessCasual",
+     "party"
+    ],
+    "fabric": "suede",
+    "formality": 4,
+    "pattern": "solid",
+    "seasons": [
+     "winter"
+    ],
+    "setRole": "none",
+    "statement": "plain",
+    "styleOrigin": "western",
+    "subcategory": "boots",
+    "warmth": 2
+   }
+  },
+  {
+   "colors": [
+    "black",
+    "brown"
+   ],
+   "id": "6134eea4-a966-5bc9-8dfe-058ed73c8963",
+   "key": "shoes_birkenstock_sandals",
+   "lastWornAt": null,
+   "name": "Birkenstock two-strap sandals",
+   "setGroupId": null,
+   "tags": {
+    "caption": "Black two-strap sandals, cork sole",
+    "category": "footwear",
+    "closedToe": false,
+    "dressCodes": [
+     "casual",
+     "smartCasual",
+     "festive"
+    ],
+    "fabric": "leather",
+    "formality": 2,
+    "pattern": "solid",
+    "seasons": [
+     "summer",
+     "monsoon"
+    ],
+    "setRole": "none",
+    "statement": "plain",
+    "styleOrigin": "western",
+    "subcategory": "sandals",
+    "warmth": 1
+   }
+  },
+  {
+   "colors": [
+    "black"
+   ],
+   "id": "ffa4012e-2a22-5b18-8b36-8ead1365a49c",
+   "key": "shoes_black_slides",
+   "lastWornAt": null,
+   "name": "Black beach sliders",
+   "setGroupId": null,
+   "tags": {
+    "caption": "Black beach sliders, home use",
+    "category": "footwear",
+    "closedToe": false,
+    "dressCodes": [
+     "home",
+     "casual"
+    ],
+    "fabric": "synthetic",
+    "formality": 1,
+    "pattern": "solid",
+    "seasons": [
+     "summer",
+     "monsoon"
+    ],
+    "setRole": "none",
+    "statement": "plain",
+    "styleOrigin": "western",
+    "subcategory": "slides",
+    "warmth": 1
+   }
+  },
+  {
+   "colors": [
+    "gold"
+   ],
+   "id": "f192faf6-6035-5354-8518-456ac33b005b",
+   "key": "acc_gold_crucifix_chain",
+   "lastWornAt": null,
+   "name": "Gold crucifix chain",
+   "setGroupId": null,
+   "tags": {
+    "caption": "Gold crucifix chain, worn daily",
+    "category": "accessory",
+    "dressCodes": [
+     "casual",
+     "smartCasual",
+     "festive",
+     "party"
+    ],
+    "fabric": "unknown",
+    "formality": 2,
+    "pattern": "solid",
+    "seasons": [
+     "summer",
+     "monsoon",
+     "winter"
+    ],
+    "setRole": "none",
+    "statement": "plain",
+    "styleOrigin": "western",
+    "subcategory": "chain",
+    "warmth": 1
+   }
+  },
+  {
+   "colors": [
+    "silver"
+   ],
+   "id": "d01ed141-b58d-5d89-8f65-b41d02287fea",
+   "key": "acc_watch",
+   "lastWornAt": null,
+   "name": "Watch",
+   "setGroupId": null,
+   "tags": {
+    "caption": "Wristwatch (details unknown, silver assumed)",
+    "category": "accessory",
+    "dressCodes": [
+     "home",
+     "casual",
+     "smartCasual",
+     "businessCasual",
+     "formal",
+     "festive",
+     "party"
+    ],
+    "fabric": "unknown",
+    "formality": 3,
+    "pattern": "solid",
+    "seasons": [
+     "summer",
+     "monsoon",
+     "winter"
+    ],
+    "setRole": "none",
+    "statement": "plain",
+    "styleOrigin": "western",
+    "subcategory": "watch",
+    "warmth": 1
+   }
+  },
+  {
+   "colors": [
+    "silver"
+   ],
+   "id": "50b0b0de-75c9-58a6-afa6-05f86d237f0b",
+   "key": "acc_clear_glasses",
+   "lastWornAt": null,
+   "name": "Clear rectangular glasses",
+   "setGroupId": null,
+   "tags": {
+    "caption": "Clear rectangular glasses",
+    "category": "accessory",
+    "dressCodes": [
+     "home",
+     "casual",
+     "smartCasual",
+     "businessCasual",
+     "formal",
+     "festive",
+     "party"
+    ],
+    "fabric": "unknown",
+    "formality": 3,
+    "pattern": "solid",
+    "seasons": [
+     "summer",
+     "monsoon",
+     "winter"
+    ],
+    "setRole": "none",
+    "statement": "plain",
+    "styleOrigin": "western",
+    "subcategory": "glasses",
+    "warmth": 1
+   }
+  },
+  {
+   "colors": [
+    "black"
+   ],
+   "id": "7bd774da-6277-5a22-ad48-3d1208b209cd",
+   "key": "acc_black_belt",
+   "lastWornAt": null,
+   "name": "Black leather belt",
+   "setGroupId": null,
+   "tags": {
+    "caption": "Black leather belt",
+    "category": "accessory",
+    "dressCodes": [
+     "smartCasual",
+     "businessCasual",
+     "formal",
+     "party",
+     "festive"
+    ],
+    "fabric": "leather",
+    "formality": 4,
+    "pattern": "solid",
+    "seasons": [
+     "summer",
+     "monsoon",
+     "winter"
+    ],
+    "setRole": "none",
+    "statement": "plain",
+    "styleOrigin": "western",
+    "subcategory": "belt",
+    "warmth": 1
+   }
+  },
+  {
+   "colors": [
+    "navy"
+   ],
+   "id": "980d5da4-20a3-536d-acfd-56fba29bcb6e",
+   "key": "knit_navy_polo",
+   "lastWornAt": null,
+   "name": "Navy knit open-collar polo",
+   "setGroupId": null,
+   "tags": {
+    "caption": "Fitted navy rib-knit open camp-collar polo",
+    "category": "top",
+    "collar": "camp",
+    "dressCodes": [
+     "smartCasual",
+     "party"
+    ],
+    "fabric": "knit",
+    "fit": "slim",
+    "formality": 3,
+    "length": "regular",
+    "pattern": "solid",
+    "seasons": [
+     "winter"
+    ],
+    "setRole": "none",
+    "sleeve": "long",
+    "statement": "plain",
+    "styleOrigin": "western",
+    "subcategory": "sweater",
+    "warmth": 2
+   }
+  },
+  {
+   "colors": [
+    "cream"
+   ],
+   "id": "16a690c3-5f19-54ce-b721-cba1bc1c9679",
+   "key": "knit_cream_quarter_zip",
+   "lastWornAt": null,
+   "name": "Cream half-zip knit",
+   "setGroupId": null,
+   "tags": {
+    "caption": "Cream ribbed half-zip knit, best-fitting top",
+    "category": "top",
+    "collar": "zipStand",
+    "dressCodes": [
+     "casual",
+     "smartCasual",
+     "party"
+    ],
+    "fabric": "knit",
+    "fit": "regular",
+    "formality": 3,
+    "length": "regular",
+    "pattern": "solid",
+    "seasons": [
+     "winter"
+    ],
+    "setRole": "none",
+    "sleeve": "long",
+    "statement": "plain",
+    "styleOrigin": "western",
+    "subcategory": "sweater",
+    "warmth": 2
+   }
+  },
+  {
+   "colors": [
+    "charcoal"
+   ],
+   "id": "7f1a49d1-8861-5c42-b409-ca50008de4ae",
+   "key": "knit_grey_zip_polo",
+   "lastWornAt": null,
+   "name": "Charcoal grey collared half-zip knit",
+   "setGroupId": null,
+   "tags": {
+    "caption": "Charcoal wool-blend collared quarter-zip, over a white tee",
+    "category": "top",
+    "collar": "polo",
+    "dressCodes": [
+     "casual",
+     "smartCasual"
+    ],
+    "fabric": "wool",
+    "fit": "regular",
+    "formality": 3,
+    "length": "regular",
+    "pattern": "solid",
+    "seasons": [
+     "winter"
+    ],
+    "setRole": "none",
+    "sleeve": "long",
+    "statement": "plain",
+    "styleOrigin": "western",
+    "subcategory": "sweater",
+    "warmth": 2
+   }
+  },
+  {
+   "colors": [
+    "brown"
+   ],
+   "id": "ec86f52b-0e3d-52bf-a522-45eb3d09ed13",
+   "key": "knit_brown_cable_polo",
+   "lastWornAt": null,
+   "name": "Brown cable-knit polo sweater",
+   "setGroupId": null,
+   "tags": {
+    "caption": "Chunky brown cable-knit polo sweater",
+    "category": "top",
+    "collar": "polo",
+    "dressCodes": [
+     "casual",
+     "smartCasual"
+    ],
+    "fabric": "knit",
+    "fit": "relaxed",
+    "formality": 3,
+    "length": "regular",
+    "pattern": "textured",
+    "seasons": [
+     "winter"
+    ],
+    "setRole": "none",
+    "sleeve": "long",
+    "statement": "plain",
+    "styleOrigin": "western",
+    "subcategory": "sweater",
+    "warmth": 3
+   }
+  },
+  {
+   "colors": [
+    "navy",
+    "green",
+    "white"
+   ],
+   "id": "12ca670e-738a-566a-9872-725dd63073cc",
+   "key": "polo_rugby_green_navy",
+   "lastWornAt": null,
+   "name": "Navy and green striped rugby polo",
+   "setGroupId": null,
+   "tags": {
+    "caption": "Navy rugby polo with wide green stripes, white collar",
+    "category": "top",
+    "collar": "polo",
+    "dressCodes": [
+     "casual"
+    ],
+    "fabric": "jersey",
+    "fit": "relaxed",
+    "formality": 2,
+    "length": "regular",
+    "pattern": "stripe",
+    "seasons": [
+     "monsoon",
+     "winter"
+    ],
+    "setRole": "none",
+    "sleeve": "long",
+    "statement": "medium",
+    "styleOrigin": "western",
+    "subcategory": "polo",
+    "warmth": 2
+   }
+  },
+  {
+   "colors": [
+    "brown"
+   ],
+   "id": "e03a877e-5e9e-5a8f-8ba0-73f7205a5d18",
+   "key": "polo_brown_tee",
+   "lastWornAt": null,
+   "name": "Brown polo t-shirt",
+   "setGroupId": null,
+   "tags": {
+    "caption": "Brown short-sleeve cotton polo",
+    "category": "top",
+    "collar": "polo",
+    "dressCodes": [
+     "casual",
+     "smartCasual"
+    ],
+    "fabric": "cotton",
+    "fit": "regular",
+    "formality": 2,
+    "length": "regular",
+    "pattern": "solid",
+    "seasons": [
+     "summer",
+     "monsoon",
+     "winter"
+    ],
+    "setRole": "none",
+    "sleeve": "short",
+    "statement": "plain",
+    "styleOrigin": "western",
+    "subcategory": "polo",
+    "warmth": 1
+   }
+  },
+  {
+   "colors": [
+    "maroon"
+   ],
+   "id": "71e38b61-c456-548b-b679-b6e147748979",
+   "key": "polo_burgundy_collar_tee",
+   "lastWornAt": null,
+   "name": "Burgundy collared t-shirt",
+   "setGroupId": null,
+   "tags": {
+    "caption": "Burgundy relaxed collared tee",
+    "category": "top",
+    "collar": "polo",
+    "dressCodes": [
+     "casual"
+    ],
+    "fabric": "jersey",
+    "fit": "relaxed",
+    "formality": 2,
+    "length": "regular",
+    "pattern": "solid",
+    "seasons": [
+     "summer",
+     "monsoon",
+     "winter"
+    ],
+    "setRole": "none",
+    "sleeve": "short",
+    "statement": "plain",
+    "styleOrigin": "western",
+    "subcategory": "polo",
+    "warmth": 1
+   }
+  },
+  {
+   "colors": [
+    "navy"
+   ],
+   "id": "2400e23e-884f-5971-b0ca-cbd0ec6a8ab1",
+   "key": "jacket_navy_hoodie",
+   "lastWornAt": null,
+   "name": "Navy hoodie",
+   "setGroupId": null,
+   "tags": {
+    "caption": "Navy regular hoodie, casual layer",
+    "category": "top",
+    "collar": "hooded",
+    "dressCodes": [
+     "home",
+     "casual"
+    ],
+    "fabric": "fleece",
+    "fit": "regular",
+    "formality": 1,
+    "length": "regular",
+    "pattern": "solid",
+    "seasons": [
+     "monsoon",
+     "winter"
+    ],
+    "setRole": "none",
+    "sleeve": "long",
+    "statement": "plain",
+    "styleOrigin": "western",
+    "subcategory": "hoodie",
+    "warmth": 2
+   }
+  },
+  {
+   "colors": [
+    "charcoal"
+   ],
+   "id": "509eb1fc-ff32-5159-b75a-d03bf2d6905c",
+   "key": "jacket_charcoal_zip_google",
+   "lastWornAt": null,
+   "name": "Dark charcoal zip jacket",
+   "setGroupId": null,
+   "tags": {
+    "caption": "Branded dark charcoal zip jacket, work-casual",
+    "category": "outerwear",
+    "collar": "zipStand",
+    "dressCodes": [
+     "casual",
+     "smartCasual"
+    ],
+    "fabric": "synthetic",
+    "fit": "regular",
+    "formality": 2,
+    "length": "regular",
+    "pattern": "solid",
+    "seasons": [
+     "monsoon",
+     "winter"
+    ],
+    "setRole": "none",
+    "sleeve": "long",
+    "statement": "plain",
+    "styleOrigin": "western",
+    "subcategory": "jacket",
+    "warmth": 2
+   }
+  },
+  {
+   "colors": [
+    "black"
+   ],
+   "id": "e0317cdd-465b-5401-96ba-2bdf495a9de1",
+   "key": "jacket_black_windcheater",
+   "lastWornAt": null,
+   "name": "Black windcheater",
+   "setGroupId": null,
+   "tags": {
+    "caption": "Light black windproof bomber-style jacket",
+    "category": "outerwear",
+    "collar": "zipStand",
+    "dressCodes": [
+     "casual",
+     "smartCasual",
+     "party"
+    ],
+    "fabric": "synthetic",
+    "fit": "regular",
+    "formality": 2,
+    "length": "regular",
+    "pattern": "solid",
+    "seasons": [
+     "monsoon",
+     "winter"
+    ],
+    "setRole": "none",
+    "sleeve": "long",
+    "statement": "plain",
+    "styleOrigin": "western",
+    "subcategory": "jacket",
+    "warmth": 1
+   }
+  },
+  {
+   "colors": [
+    "teal"
+   ],
+   "id": "bfa009ef-aa4f-560d-8124-483ef7ba69d8",
+   "key": "jacket_teal_blue_zip_hoodie",
+   "lastWornAt": null,
+   "name": "Teal full-zip hoodie jacket",
+   "setGroupId": null,
+   "tags": {
+    "caption": "Bright teal brushed-fleece full-zip hoodie jacket",
+    "category": "outerwear",
+    "collar": "hooded",
+    "dressCodes": [
+     "casual"
+    ],
+    "fabric": "fleece",
+    "fit": "regular",
+    "formality": 1,
+    "length": "regular",
+    "pattern": "solid",
+    "seasons": [
+     "monsoon",
+     "winter"
+    ],
+    "setRole": "none",
+    "sleeve": "long",
+    "statement": "statement",
+    "styleOrigin": "western",
+    "subcategory": "jacket",
+    "warmth": 3
+   }
+  },
+  {
+   "colors": [
+    "mustard"
+   ],
+   "id": "4a56b8c8-22e0-56ea-a6dc-c87e2f3b280c",
+   "key": "kurta_mustard",
+   "lastWornAt": null,
+   "name": "Mustard embroidered kurta",
+   "setGroupId": "dfad9f9d-96cd-56d2-b7ba-d98815d9fb0a",
+   "tags": {
+    "caption": "Made-up: mustard cotton-silk kurta with light embroidery, mandarin collar",
+    "category": "top",
+    "collar": "mandarin",
+    "dressCodes": [
+     "festive",
+     "party"
+    ],
+    "fabric": "silk",
+    "fit": "regular",
+    "formality": 4,
+    "length": "long",
+    "pattern": "embroidered",
+    "seasons": [
+     "summer",
+     "monsoon",
+     "winter"
+    ],
+    "setRole": "kurta",
+    "sleeve": "long",
+    "statement": "medium",
+    "styleOrigin": "indian",
+    "subcategory": "kurta",
+    "warmth": 1
+   }
+  },
+  {
+   "colors": [
+    "cream"
+   ],
+   "id": "ba1fd57d-8c2c-5cba-999f-6f5af563b76b",
+   "key": "pyjama_cream",
+   "lastWornAt": null,
+   "name": "Cream pyjama",
+   "setGroupId": "dfad9f9d-96cd-56d2-b7ba-d98815d9fb0a",
+   "tags": {
+    "caption": "Made-up: cream cotton pyjama matching the kurta",
+    "category": "bottom",
+    "dressCodes": [
+     "festive",
+     "party"
+    ],
+    "fabric": "cotton",
+    "fit": "regular",
+    "formality": 4,
+    "length": "full",
+    "pattern": "solid",
+    "seasons": [
+     "summer",
+     "monsoon",
+     "winter"
+    ],
+    "setRole": "kurtaBottom",
+    "statement": "plain",
+    "styleOrigin": "indian",
+    "subcategory": "pyjama",
+    "warmth": 1
+   }
+  },
+  {
+   "colors": [
+    "tan"
+   ],
+   "id": "7847145e-93b8-5bc6-b434-b86c1acdd8fb",
+   "key": "juttis_tan",
+   "lastWornAt": null,
+   "name": "Tan juttis",
+   "setGroupId": null,
+   "tags": {
+    "caption": "Made-up: tan leather juttis, closed toe",
+    "category": "footwear",
+    "closedToe": true,
+    "dressCodes": [
+     "festive",
+     "party"
+    ],
+    "fabric": "leather",
+    "formality": 4,
+    "pattern": "solid",
+    "seasons": [
+     "summer",
+     "monsoon",
+     "winter"
+    ],
+    "setRole": "none",
+    "statement": "plain",
+    "styleOrigin": "indian",
+    "subcategory": "juttis",
+    "warmth": 1
+   }
+  }
+ ]
+}

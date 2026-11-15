@@ -7,6 +7,7 @@ struct AICallRecord: Sendable {
     var tokens: Int?
     var success: Bool
     var error: String?
+    var detail: String?
 }
 
 func describe(_ error: Error) -> String {
@@ -16,12 +17,12 @@ func describe(_ error: Error) -> String {
 
 /// The wrapper every AI call goes through: one record per call, success or not; errors are re-thrown.
 enum AICall {
-    static func record<T>(purpose: String, provider: String = "onDevice", model: String, tokens: (@Sendable () -> Int?)? = nil,
+    nonisolated(nonsending) static func record<T>(purpose: String, provider: String = AppleOnDeviceProvider.name, model: String, detail: String? = nil, tokens: (@Sendable () -> Int?)? = nil,
                           sink: (AICallRecord) async -> Void, _ body: () async throws -> T) async throws -> T {
         let clock = ContinuousClock(), began = clock.now, date = Date()
         func make(success: Bool, error: String?) -> AICallRecord {
             AICallRecord(purpose: purpose, provider: provider, model: model, start: date, seconds: max(1e-6, (clock.now - began) / .seconds(1)),
-                         tokens: success ? tokens?() : nil, success: success, error: error)
+                         tokens: success ? tokens?() : nil, success: success, error: error, detail: detail)
         }
         do {
             let v = try await body()

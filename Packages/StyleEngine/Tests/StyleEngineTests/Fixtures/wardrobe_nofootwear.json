@@ -1,0 +1,212 @@
+{
+ "items": [
+  {
+   "colors": [
+    "rust"
+   ],
+   "id": "6a216eac-9ba7-503f-ab8e-f38c8312b487",
+   "key": "shirt_rust_mandarin",
+   "lastWornAt": null,
+   "name": "Rust mandarin-collar shirt",
+   "setGroupId": null,
+   "tags": {
+    "caption": "Rust cotton-linen shirt, mandarin collar, relaxed",
+    "category": "top",
+    "collar": "mandarin",
+    "dressCodes": [
+     "smartCasual",
+     "festive"
+    ],
+    "fabric": "cottonLinen",
+    "fit": "relaxed",
+    "formality": 3,
+    "length": "regular",
+    "pattern": "solid",
+    "seasons": [
+     "summer",
+     "monsoon"
+    ],
+    "setRole": "none",
+    "sleeve": "long",
+    "statement": "medium",
+    "styleOrigin": "western",
+    "subcategory": "shirt",
+    "warmth": 1
+   }
+  },
+  {
+   "colors": [
+    "white"
+   ],
+   "id": "ec320fca-b4a5-586b-acb3-713160551159",
+   "key": "tee_white_slim",
+   "lastWornAt": null,
+   "name": "White slim-fit tee",
+   "setGroupId": null,
+   "tags": {
+    "caption": "White slim crew tee, base layer",
+    "category": "top",
+    "collar": "crew",
+    "dressCodes": [
+     "home",
+     "casual"
+    ],
+    "fabric": "jersey",
+    "fit": "slim",
+    "formality": 2,
+    "length": "regular",
+    "pattern": "solid",
+    "seasons": [
+     "summer",
+     "monsoon",
+     "winter"
+    ],
+    "setRole": "none",
+    "sleeve": "short",
+    "statement": "plain",
+    "styleOrigin": "western",
+    "subcategory": "tshirt",
+    "warmth": 1
+   }
+  },
+  {
+   "colors": [
+    "black"
+   ],
+   "id": "12fae424-cd9b-5eff-8394-df88933a1fa9",
+   "key": "pants_black_chinos_relaxed",
+   "lastWornAt": null,
+   "name": "Black chinos, relaxed fit",
+   "setGroupId": null,
+   "tags": {
+    "caption": "Black cotton-twill chinos, relaxed, everyday pair",
+    "category": "bottom",
+    "dressCodes": [
+     "casual",
+     "smartCasual",
+     "businessCasual",
+     "party",
+     "festive"
+    ],
+    "fabric": "twill",
+    "fit": "relaxed",
+    "formality": 3,
+    "length": "full",
+    "pattern": "solid",
+    "seasons": [
+     "summer",
+     "monsoon",
+     "winter"
+    ],
+    "setRole": "none",
+    "statement": "plain",
+    "styleOrigin": "western",
+    "subcategory": "chinos",
+    "warmth": 2
+   }
+  },
+  {
+   "colors": [
+    "brown"
+   ],
+   "id": "cff0e339-f96e-582f-9fdc-48fcf60c5fbb",
+   "key": "pants_brown_linen",
+   "lastWornAt": null,
+   "name": "Brown mocha linen trousers",
+   "setGroupId": null,
+   "tags": {
+    "caption": "Mocha brown relaxed linen trousers",
+    "category": "bottom",
+    "dressCodes": [
+     "casual",
+     "smartCasual",
+     "festive"
+    ],
+    "fabric": "linen",
+    "fit": "relaxed",
+    "formality": 3,
+    "length": "full",
+    "pattern": "solid",
+    "seasons": [
+     "summer",
+     "monsoon"
+    ],
+    "setRole": "none",
+    "statement": "plain",
+    "styleOrigin": "western",
+    "subcategory": "trousers",
+    "warmth": 1
+   }
+  },
+  {
+   "colors": [
+    "silver"
+   ],
+   "id": "d01ed141-b58d-5d89-8f65-b41d02287fea",
+   "key": "acc_watch",
+   "lastWornAt": null,
+   "name": "Watch",
+   "setGroupId": null,
+   "tags": {
+    "caption": "Wristwatch (details unknown, silver assumed)",
+    "category": "accessory",
+    "dressCodes": [
+     "home",
+     "casual",
+     "smartCasual",
+     "businessCasual",
+     "formal",
+     "festive",
+     "party"
+    ],
+    "fabric": "unknown",
+    "formality": 3,
+    "pattern": "solid",
+    "seasons": [
+     "summer",
+     "monsoon",
+     "winter"
+    ],
+    "setRole": "none",
+    "statement": "plain",
+    "styleOrigin": "western",
+    "subcategory": "watch",
+    "warmth": 1
+   }
+  },
+  {
+   "colors": [
+    "cream"
+   ],
+   "id": "16a690c3-5f19-54ce-b721-cba1bc1c9679",
+   "key": "knit_cream_quarter_zip",
+   "lastWornAt": null,
+   "name": "Cream half-zip knit",
+   "setGroupId": null,
+   "tags": {
+    "caption": "Cream ribbed half-zip knit, best-fitting top",
+    "category": "top",
+    "collar": "zipStand",
+    "dressCodes": [
+     "casual",
+     "smartCasual",
+     "party"
+    ],
+    "fabric": "knit",
+    "fit": "regular",
+    "formality": 3,
+    "length": "regular",
+    "pattern": "solid",
+    "seasons": [
+     "winter"
+    ],
+    "setRole": "none",
+    "sleeve": "long",
+    "statement": "plain",
+    "styleOrigin": "western",
+    "subcategory": "sweater",
+    "warmth": 2
+   }
+  }
+ ]
+}

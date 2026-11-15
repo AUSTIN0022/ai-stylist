@@ -16,17 +16,6 @@ struct SpikeTagger {
     /// Long side of the image sent to the model, in pixels.
     var longSide: CGFloat = 768
 
-    /// nil when the model is usable, else a printable reason.
-    static func unavailableReason() -> String? {
-        switch SystemLanguageModel.default.availability {
-        case .available: nil
-        case .unavailable(.deviceNotEligible): "Device not eligible for Apple Intelligence."
-        case .unavailable(.appleIntelligenceNotEnabled): "Apple Intelligence is turned off in Settings."
-        case .unavailable(.modelNotReady): "Model not ready: still downloading. Stay on Wi-Fi and power."
-        case .unavailable(let other): "Model unavailable: \(other)"
-        }
-    }
-
     /// Runs calls A, B, C, each in a fresh session, greedy. `cutout` is the transparent cut-out.
     func tag(cutout: CGImage) async throws -> SpikeTagResult {
         guard let img = SpikeImage.onWhite(cutout, longSide: longSide) else { throw SpikeCutoutError.render }

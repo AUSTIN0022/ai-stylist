@@ -5,13 +5,15 @@ import WardrobeImaging
 @main
 struct AIStylistApp: App {
     private let container: ModelContainer
+    private let env: AppEnvironment
 
     init() {
         let c = try! ModelContainer(for: Schema(Item.allModels))
         container = c
-        // One background tagging queue for the whole app; items left in `tagging` resume at launch.
-        let queue = TaggingQueue(container: c, store: .standard, tagger: FoundationModelsTagger())
-        Task { @MainActor in AppServices.tagging = queue; await queue.start() }
+        // The one place that picks the AI vendor. One background tagging queue for the whole app; items left in `tagging` resume at launch.
+        let env = AppEnvironment(container: c, provider: AppleOnDeviceProvider())
+        self.env = env
+        Task { await env.tagging.start() }
     }
 
     var body: some Scene {
@@ -28,6 +30,7 @@ struct AIStylistApp: App {
             ContentView()
             #endif
         }
+        .environment(env)
         .modelContainer(container)
     }
 }

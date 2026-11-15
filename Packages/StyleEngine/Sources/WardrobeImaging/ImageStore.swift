@@ -10,6 +10,10 @@ public struct ImageStore: Sendable {
     public static let cutoutName = "cutout.png"
     public static let displayName = "display.jpg"
     public static let labelName = "label.jpg"
+    /// Generated store-style photo (Image Playground). Optional; the other files never depend on it.
+    public static let productName = "product.jpg"
+    /// 512x512 patch of plain fabric from the cut-out, the colour and texture reference for the product photo.
+    public static let fabricName = "fabric.jpg"
 
     public let root: URL
     public init(root: URL) { self.root = root }
@@ -30,6 +34,14 @@ public struct ImageStore: Sendable {
     }
 
     public func load(_ name: String, for id: UUID) throws -> Data { try Data(contentsOf: url(for: name, id: id)) }
+
+    /// What grid and detail show by default: the product photo when there is one, else the catalogue image.
+    public func preferredName(for id: UUID) -> String {
+        FileManager.default.fileExists(atPath: url(for: Self.productName, id: id).path) ? Self.productName : Self.displayName
+    }
+
+    /// Deletes only product.jpg.
+    public func removeProductPhoto(for id: UUID) { try? FileManager.default.removeItem(at: url(for: Self.productName, id: id)) }
 
     public func deleteItem(_ id: UUID) { try? FileManager.default.removeItem(at: folder(for: id)) }
 
