@@ -2,6 +2,7 @@ import ImagePlayground
 import StyleEngine
 import SwiftData
 import SwiftUI
+import UniformTypeIdentifiers
 import WardrobeImaging
 
 /// Settings: AI status, counts, Accuracy, AI log, Developer, Delete all data. Has its own NavigationStack, so present it as a sheet.
@@ -20,6 +21,7 @@ struct SettingsView: View {
     @State private var shot = ProductShotSession()
     @State private var batchRunning = false
     @State private var tick = 0
+    @State private var showImporter = false
     @Environment(\.supportsImagePlayground) private var supportsImagePlayground
 
     init(env: AppEnvironment) { self.env = env; _status = State(initialValue: AIStatus.current(env.provider)) }
@@ -58,6 +60,9 @@ struct SettingsView: View {
         }
     }
 
+    private var stats: SettingsStats { _ = items.count; _ = logs.count; return SettingsStats.compute(in: context) }
+    private var exportFile: URL? { _ = items.count; return try? WardrobeExport.file(from: context) }
+
     private func count(_ s: ItemStatus) -> Int { items.filter { $0.status == s }.count }
     private var untagged: Int { items.filter { $0.status == .ready && $0.aiRawData == nil }.count }
     private var reviewed: Int { items.filter { $0.aiRawData != nil }.count }
@@ -86,6 +91,9 @@ struct SettingsView: View {
                     LabeledContent("Tagging now", value: "\(count(.tagging))")
                     LabeledContent("Failed", value: "\(count(.failed))")
                     LabeledContent("AI calls logged", value: "\(logs.count)")
+                    LabeledContent("AI calls this week", value: "\(stats.aiCallsThisWeek)")
+                    LabeledContent("Median tagging time", value: stats.medianTaggingSeconds.map { String(format: "%.1f s", $0) } ?? "n/a")
+                    LabeledContent("Outfits", value: "\(stats.outfits)")
                     Button(refreshing ? "Refreshing catalogue images…" : "Refresh catalogue images") { refreshCatalogue() }
                         .disabled(refreshing || items.isEmpty)
                     if supportsImagePlayground {
@@ -94,6 +102,12 @@ struct SettingsView: View {
                     } else {
                         Text(productShotUnavailableReason).font(.footnote).foregroundStyle(.secondary)
                     }
+                }
+                Section("Backup") {
+                    if let f = exportFile { ShareLink(item: f) { Label("Export wardrobe (JSON)", systemImage: "square.and.arrow.up") } }
+                    #if DEBUG
+                    Button("Import wardrobe.json (debug)") { showImporter = true }
+                    #endif
                 }
                 Section {
                     NavigationLink("Accuracy") { AccuracyView() }
@@ -112,6 +126,11 @@ struct SettingsView: View {
                 }
             }
             .productShotSheet(shot)
+            .fileImporter(isPresented: $showImporter, allowedContentTypes: [.json]) { r in
+                guard case .success(let url) = r, url.startAccessingSecurityScopedResource() else { return }
+                defer { url.stopAccessingSecurityScopedResource() }
+                message = (try? Data(contentsOf: url)).flatMap { try? WardrobeExport.importData($0, into: context) }.map { "Imported \($0) items." } ?? "Import failed."
+            }
             .onReceive(NotificationCenter.default.publisher(for: .itemImagesChanged)) { _ in tick += 1 }
             .navigationTitle("Settings").navigationBarTitleDisplayMode(.inline)
             .toolbar { ToolbarItem(placement: .confirmationAction) { Button("Done") { dismiss() } } }

@@ -67,7 +67,8 @@ enum OutfitSource: String, Codable, Sendable { case ai, manual }
     var note: String?
     var createdAt: Date
     var saved: Bool
-    var canvasLayoutData: Data?   // per-item position and scale, manual outfits
+    var canvasLayoutData: Data?   // per-item position and scale (OutfitCanvas JSON), once opened in the builder
+    var canvas: OutfitCanvas? { canvasLayoutData.flatMap { try? JSONDecoder().decode(OutfitCanvas.self, from: $0) } }
     init(id: UUID = UUID(), name: String, source: OutfitSource) {
         self.id = id; self.name = name; self.source = source; createdAt = .now; saved = false
     }
@@ -118,8 +119,14 @@ enum OutfitSource: String, Codable, Sendable { case ai, manual }
     var slot: String?
     var reason: String?
     var createdAt: Date
-    init(outfitId: UUID, action: String, slot: String? = nil, reason: String? = nil, createdAt: Date = .now) {
+    /// The outfit's items when the event happened (Sprint 5: pair weights). Empty on older rows.
+    var itemIds: [UUID] = []
+    var removedItemId: UUID?      // swapped: the item taken out
+    var addedItemId: UUID?        // swapped: its replacement
+    init(outfitId: UUID, action: String, slot: String? = nil, reason: String? = nil, createdAt: Date = .now,
+         itemIds: [UUID] = [], removedItemId: UUID? = nil, addedItemId: UUID? = nil) {
         self.outfitId = outfitId; self.action = action; self.slot = slot; self.reason = reason; self.createdAt = createdAt
+        self.itemIds = itemIds; self.removedItemId = removedItemId; self.addedItemId = addedItemId
     }
 }
 

@@ -14,6 +14,8 @@ public struct ImageStore: Sendable {
     public static let productName = "product.jpg"
     /// 512x512 patch of plain fabric from the cut-out, the colour and texture reference for the product photo.
     public static let fabricName = "fabric.jpg"
+    /// Derived: the product photo (or cut-out) trimmed to the garment with a thin white outline. Safe to delete; rebuilt on demand.
+    public static let stickerName = "sticker.png"
 
     public let root: URL
     public init(root: URL) { self.root = root }
@@ -41,7 +43,11 @@ public struct ImageStore: Sendable {
     }
 
     /// Deletes only product.jpg.
-    public func removeProductPhoto(for id: UUID) { try? FileManager.default.removeItem(at: url(for: Self.productName, id: id)) }
+    /// Also drops the derived sticker, which was built from the product photo.
+    public func removeProductPhoto(for id: UUID) {
+        try? FileManager.default.removeItem(at: url(for: Self.productName, id: id))
+        try? FileManager.default.removeItem(at: url(for: Self.stickerName, id: id))
+    }
 
     public func deleteItem(_ id: UUID) { try? FileManager.default.removeItem(at: folder(for: id)) }
 

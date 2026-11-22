@@ -47,10 +47,21 @@ targets:
     settings:
       base:
         GENERATE_INFOPLIST_FILE: YES
+  AIStylistUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources:
+      - path: UITests
+        type: syncedFolder
+    dependencies:
+      - target: AIStylist
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
 schemes:
   AIStylist:
     build:
       targets:
         AIStylist: all
     test:
-      targets: [AIStylistTests]
+      targets: [AIStylistTests, AIStylistUITests]

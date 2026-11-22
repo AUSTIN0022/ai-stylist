@@ -179,8 +179,9 @@ struct Run {
         accessories = pool.filter { $0.tags.category == .accessory && $0.setGroupId == nil }
     }
 
+    /// Worn in the last 2 days. Only tops and one-pieces count: shoes, layers and accessories are fine to repeat.
     private func recent(_ i: EngineItem) -> Bool {
-        guard let d = i.lastWornAt else { return false }
+        guard let d = i.lastWornAt, [.top, .onePiece].contains(i.tags.category) || i.setGroupId != nil else { return false }
         return ctx.today.timeIntervalSince(d) < 2 * 86_400
     }
 

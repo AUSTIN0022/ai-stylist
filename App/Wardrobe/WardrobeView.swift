@@ -14,6 +14,9 @@ struct WardrobeView: View {
     @State private var showCamera = false
     @State private var filter = WardrobeFilter()
     @State private var showSettings = false
+    @State private var selecting = false
+    @State private var chosen: Set<UUID> = []
+    @State private var linkMessage: String?
     @State private var shot = ProductShotSession()
     @State private var lastReview: ReviewModel?   // its product-photo queue runs once the review has gone
 
@@ -45,6 +48,18 @@ struct WardrobeView: View {
     /// Items with no category yet (the "Unsorted" section).
     static func unsortedItems(_ items: [Item]) -> [Item] { items.filter { $0.tags.category == nil } }
 
+    /// One wardrobe cell: opens the item, or toggles it in select mode.
+    @ViewBuilder private func cell(_ item: Item) -> some View {
+        if selecting {
+            Button { if !chosen.insert(item.id).inserted { chosen.remove(item.id) } } label: {
+                ItemCell(item: item, store: store)
+                    .overlay(alignment: .topLeading) { Image(systemName: chosen.contains(item.id) ? "checkmark.circle.fill" : "circle").padding(6) }
+            }.buttonStyle(.plain)
+        } else {
+            NavigationLink(value: item.id) { ItemCell(item: item, store: store) }.buttonStyle(.plain)
+        }
+    }
+
     private var content: some View {
     LazyVStack(alignment: .leading, spacing: 20) {
         if !items.isEmpty { FilterBar(filter: $filter, snaps: snapshots, shown: filtered.count, total: items.count) }
@@ -58,11 +73,16 @@ struct WardrobeView: View {
                             let m = ReviewModel.live(env); m.beginExisting(Self.unsortedItems(filtered)); review = m
                         }.buttonStyle(.bordered).controlSize(.small)
                     }
-                }
-                LazyVGrid(columns: columns, spacing: 8) {
-                    ForEach(section.items) { item in
-                        NavigationLink(value: item.id) { ItemCell(item: item, store: store) }.buttonStyle(.plain)
+                    if !selecting {
+                        NavigationLink(value: SectionRoute(title: section.title)) {
+                            Text("View all (\(section.items.count))").font(.footnote.weight(.medium))
+                        }.buttonStyle(.bordered).controlSize(.small)
                     }
+                }
+                ScrollView(.horizontal, showsIndicators: true) {
+                    LazyHStack(spacing: 8) {
+                        ForEach(section.items) { item in cell(item).frame(width: 104) }
+                    }.padding(.bottom, 6)
                 }
             }
         }
@@ -87,6 +107,9 @@ struct WardrobeView: View {
             }
             .navigationTitle("Wardrobe")
             .searchable(text: $filter.text, prompt: "Search name, brand, colour")
+            .navigationDestination(for: SectionRoute.self) { route in
+                CategoryPage(title: route.title, items: sections.first { $0.title == route.title }?.items ?? [], cell: cell)
+            }
             .navigationDestination(for: UUID.self) { id in
                 if let item = items.first(where: { $0.id == id }) { ItemDetailView(item: item) }
             }
@@ -95,10 +118,28 @@ struct WardrobeView: View {
                     Button { showSettings = true } label: { Label("Settings", systemImage: "gearshape") }
                 }
                 ToolbarItemGroup(placement: .primaryAction) {
+                    Button(selecting ? "Done" : "Select") { selecting.toggle(); chosen = []; linkMessage = nil }
                     Button { showCamera = true } label: { Label("Camera", systemImage: "camera") }
                     PhotosPicker(selection: $picked, maxSelectionCount: 20, matching: .images) {
                         Label("Photo library", systemImage: "photo.on.rectangle")
                     }
+                }
+            }
+            .safeAreaInset(edge: .bottom) {
+                if selecting {
+                    VStack(spacing: 4) {
+                        if let m = linkMessage { Text(m).font(.footnote).foregroundStyle(.red) }
+                        HStack {
+                            Button("Link as a set") {
+                                linkMessage = Item.linkSet(items.filter { chosen.contains($0.id) }, in: context)
+                                if linkMessage == nil { selecting = false; chosen = [] }
+                            }.buttonStyle(.borderedProminent).disabled(chosen.count < 2)
+                            Button("Unlink") {
+                                for i in items where chosen.contains(i.id) { Item.unlinkSet(i, in: context) }
+                                selecting = false; chosen = []
+                            }.buttonStyle(.bordered).disabled(!items.contains { chosen.contains($0.id) && $0.setGroupId != nil })
+                        }
+                    }.padding().frame(maxWidth: .infinity).background(.bar)
                 }
             }
             .onChange(of: picked) { _, new in
@@ -136,6 +177,9 @@ struct ItemCell: View {
             .clipShape(RoundedRectangle(cornerRadius: 10))
             .overlay(RoundedRectangle(cornerRadius: 10).stroke(.quaternary))
             .overlay(alignment: .topTrailing) {
+                if item.setGroupId != nil {
+                    Image(systemName: "link.circle.fill").foregroundStyle(.tint).padding(6)
+                }
                 if item.cutoutFailed {
                     Image(systemName: "exclamationmark.circle.fill").foregroundStyle(.orange).padding(6)
                         .accessibilityLabel("Cut-out failed")
@@ -189,5 +233,24 @@ struct FilterBar: View {
                 .overlay(Capsule().stroke(n == 0 ? Color.clear : Color.accentColor))
         }
         .disabled(options.isEmpty)
+    }
+}
+
+
+/// Navigation value for a wardrobe section's "View all" page.
+struct SectionRoute: Hashable { let title: String }
+
+/// Every item of one section in a grid (opened from "View all").
+struct CategoryPage<Cell: View>: View {
+    let title: String
+    let items: [Item]
+    let cell: (Item) -> Cell
+    private let columns = [GridItem(.adaptive(minimum: 104), spacing: 8)]
+    var body: some View {
+        ScrollView {
+            LazyVGrid(columns: columns, spacing: 8) { ForEach(items) { cell($0) } }.padding(16)
+        }
+        .navigationTitle(title).navigationBarTitleDisplayMode(.inline)
+        .overlay { if items.isEmpty { ContentUnavailableView("Nothing here", systemImage: "tshirt") } }
     }
 }
