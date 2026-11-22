@@ -23,17 +23,25 @@ struct OutfitCardView: View {
                     ForEach(rects.keys.sorted(), id: \.self) { slot in
                         let r = rects[slot]!
                         Image(decorative: images[slot]!, scale: 1).resizable()
+                            .shadow(color: .black.opacity(0.18), radius: 2, y: 1)
                             .frame(width: r.width, height: r.height)
                             .overlay { if selected == slot { RoundedRectangle(cornerRadius: 6).stroke(.tint, lineWidth: 2) } }
-                            .overlay(alignment: .bottom) {
-                                if !compact, let n = items[slots[slot] ?? UUID()]?.name {
-                                    Text(n).font(.system(size: 9, weight: .medium)).lineLimit(1).padding(.horizontal, 6).padding(.vertical, 2)
-                                        .background(.white.opacity(0.85), in: Capsule()).padding(2).allowsHitTesting(false)
-                                }
-                            }
                             .contentShape(Rectangle())
                             .onTapGesture { onSelect?(slot) }
                             .position(x: r.midX, y: r.midY)
+                    }
+                    // Names on their own top layer: never covered by a neighbouring item, never cut to the item's width.
+                    if !compact {
+                        ForEach(rects.keys.sorted(), id: \.self) { slot in
+                            if let n = items[slots[slot] ?? UUID()]?.name {
+                                let r = rects[slot]!
+                                Text(n).font(.system(size: 10, weight: .semibold)).foregroundStyle(.black).lineLimit(1).fixedSize()
+                                    .padding(.horizontal, 7).padding(.vertical, 2)
+                                    .background(.white.opacity(0.92), in: Capsule())
+                                    .position(x: min(max(r.midX, 64), geo.size.width - 64), y: min(r.maxY - 10, geo.size.height - 10))
+                                    .allowsHitTesting(false)
+                            }
+                        }
                     }
                 }
                 .frame(width: geo.size.width, height: geo.size.height)
@@ -47,15 +55,16 @@ struct OutfitCardView: View {
             }
         }
         .task(id: slots.map { "\($0.key.rawValue)\($0.value)" }.sorted().joined()) { await load() }
+        .onReceive(NotificationCenter.default.publisher(for: .itemImagesChanged)) { _ in Task { await load() } }
     }
 
-    /// Cut-out first, the display image when there is none (or it failed).
     private func load() async {
         var out: [Slot: CGImage] = [:]
         for (slot, id) in slots {
             guard let item = items[id] else { continue }
-            let urls = [item.cutoutFile.map { store.url(for: $0, id: id) }, store.url(for: item.displayFile, id: id)].compactMap { $0 }
-            out[slot] = await Task.detached { urls.lazy.compactMap { ImageCodec.thumbnail(at: $0, maxPixel: 400) }.first }.value
+            if let sticker = await StickerMaker.image(for: id, store: store, cutout: VisionCutoutService(), maxPixel: 600) { out[slot] = sticker; continue }
+            let urls = [store.url(for: ImageStore.productName, id: id), item.cutoutFile.map { store.url(for: $0, id: id) }, store.url(for: item.displayFile, id: id)].compactMap { $0 }
+            out[slot] = await Task.detached { urls.lazy.filter { FileManager.default.fileExists(atPath: $0.path) }.compactMap { ImageCodec.thumbnail(at: $0, maxPixel: 400) }.first }.value
         }
         images = out
     }

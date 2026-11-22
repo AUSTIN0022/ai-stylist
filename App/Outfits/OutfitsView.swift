@@ -8,6 +8,7 @@ struct OutfitsView: View {
     @Query private var rows: [OutfitItem]
     @Query private var items: [Item]
     @State private var occasion: Occasion?
+    @State private var building = false
 
     private let columns = [GridItem(.adaptive(minimum: 150), spacing: 12)]
 
@@ -44,7 +45,8 @@ struct OutfitsView: View {
                             ForEach(shown) { o in
                                 NavigationLink(value: o.id) {
                                     VStack(alignment: .leading, spacing: 4) {
-                                        OutfitCardView(slots: OutfitSaver.slots(of: o, rows: rows), items: byId, store: env.store, compact: true)
+                                        if let c = o.canvas { CanvasOutfitView(canvas: c, items: byId, store: env.store) }
+                                        else { OutfitCardView(slots: OutfitSaver.slots(of: o, rows: rows), items: byId, store: env.store, compact: true) }
                                         Text(o.name).font(.subheadline.weight(.medium)).lineLimit(1)
                                     }
                                 }.buttonStyle(.plain)
@@ -54,6 +56,8 @@ struct OutfitsView: View {
                 }.padding(16)
             }
             .navigationTitle("Outfits")
+            .toolbar { ToolbarItem(placement: .primaryAction) { Button { building = true } label: { Label("New outfit", systemImage: "plus") } } }
+            .fullScreenCover(isPresented: $building) { OutfitBuilderView() }
             .navigationDestination(for: UUID.self) { id in
                 if let o = saved.first(where: { $0.id == id }) { OutfitDetailView(outfit: o, rows: rows, items: items) }
             }

@@ -68,6 +68,13 @@ struct ItemDetailView: View {
                         }.pickerStyle(.menu)
                     }
                 }
+                HStack {
+                    Text("Last worn").font(.headline)
+                    Spacer()
+                    Text(item.lastWornAt.map { Calendar.current.isDateInToday($0) ? "today" : $0.formatted(date: .abbreviated, time: .omitted) } ?? "never")
+                        .foregroundStyle(.secondary)
+                    Text("· \(item.wearCount(in: context))×").foregroundStyle(.secondary)
+                }
                 Button("Review again", systemImage: "checklist") {
                     let m = ReviewModel.live(env); m.beginExisting([item]); review = m
                 }.buttonStyle(.bordered)

@@ -9,16 +9,16 @@ public enum CardLayout {
     /// The box a slot may use, in canvas points. `slots` decides whether the side columns exist.
     public static func box(_ slot: Slot, in canvas: CGSize, slots: Set<Slot>) -> CGRect {
         let hasLeft = !slots.isDisjoint(with: leftSlots), hasRight = !slots.isDisjoint(with: [.accessory1, .accessory2])
-        let x0 = hasLeft ? 0.27 : 0.08, x1 = hasRight ? 0.73 : 0.92       // main column, fractions of width
+        let x0 = hasLeft ? 0.27 : 0.03, x1 = hasRight ? 0.73 : 0.97       // main column, fractions of width
         func r(_ x0: Double, _ y0: Double, _ x1: Double, _ y1: Double) -> CGRect {
             CGRect(x: x0 * canvas.width, y: y0 * canvas.height, width: (x1 - x0) * canvas.width, height: (y1 - y0) * canvas.height)
         }
-        let mid = (x0 + x1) / 2, shoeHalf = (x1 - x0) * 0.3
+        let mid = (x0 + x1) / 2, shoeHalf = (x1 - x0) * 0.42
         switch slot {
-        case .top, .setTop: return r(x0, 0.03, x1, 0.50)
-        case .bottom, .setBottom: return r(x0, 0.44, x1, 0.80)
-        case .onePiece: return r(x0, 0.03, x1, 0.80)
-        case .footwear: return r(mid - shoeHalf, 0.81, mid + shoeHalf, 0.98)
+        case .top, .setTop: return r(x0, 0.01, x1, 0.52)
+        case .bottom, .setBottom: return r(x0, 0.42, x1, 0.80)
+        case .onePiece: return r(x0, 0.01, x1, 0.80)
+        case .footwear: return r(mid - shoeHalf, 0.80, mid + shoeHalf, 0.99)
         case .outerwear, .baseLayer, .setDrape:
             let n = Double(leftSlots.filter(slots.contains).firstIndex(of: slot) ?? 0)
             return r(0.02, 0.06 + n * 0.30, 0.25, 0.34 + n * 0.30)

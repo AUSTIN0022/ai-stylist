@@ -7,7 +7,9 @@ import WardrobeImaging
 extension Item {
     /// The engine's input: effective tags and colours, ready only when tagging finished.
     var engineItem: EngineItem {
-        EngineItem(id: id, name: name, tags: tags, colors: colorNames.compactMap(ColorName.init(rawValue:)),
+        var t = tags
+        if setGroupId != nil { t.setRole = setRole }          // a set linked by hand: its role wins over the AI's
+        return EngineItem(id: id, name: name, tags: t, colors: colorNames.compactMap(ColorName.init(rawValue:)),
                    setGroupId: setGroupId, lastWornAt: lastWornAt, isReady: status == .ready)
     }
 }
@@ -108,6 +110,7 @@ extension Occasion {
     private func run() {
         guard let intent else { return }
         resetOutfitState()
+        session.pairWeights = Learning.pairWeights(in: context)
         session.start(intent: intent, items: engineItems(), today: today)
         fillNotes()
     }
@@ -116,7 +119,7 @@ extension Occasion {
         guard let intent else { return }
         let old = session.another(intent: intent, items: engineItems(), today: today)
         guard !old.isEmpty else { return }          // exhausted: state says so, old outfits stay
-        for o in old { context.insert(FeedbackEvent(outfitId: o.id, action: "rejected")) }
+        for o in old { context.insert(FeedbackEvent(outfitId: o.id, action: "rejected", itemIds: o.candidate.itemIds)) }
         try? context.save()
         resetOutfitState()
         fillNotes()
@@ -135,9 +138,11 @@ extension Occasion {
     /// Replaces the selected slot's item with the one in `alt`. The note is dropped: it described the old item.
     func swap(to alt: OutfitCandidate) {
         guard let (id, slot) = selection, let new = alt.slots[slot] else { return }
+        let before = outfits.first { $0.id == id }?.candidate.slots ?? [:]
         session.swap(id, slot: slot, to: new)
         notes[id] = nil; swapped.insert(id); savedIds.remove(id)      // new item set: a different outfit
-        context.insert(FeedbackEvent(outfitId: id, action: "swapped", slot: slot.rawValue))
+        context.insert(FeedbackEvent(outfitId: id, action: "swapped", slot: slot.rawValue,
+                                     itemIds: before.filter { $0.key != slot }.map(\.value), removedItemId: before[slot], addedItemId: new))
         try? context.save()
         selection = nil; swapOptions = []
     }

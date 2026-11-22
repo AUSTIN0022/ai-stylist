@@ -118,4 +118,4 @@ Do M14 last, and only after the export in M12.
 
 | Date | Automated | Evals | Manual | Open defects | Notes |
 |---|---|---|---|---|---|
-| | | | | | |
+| 2026-11-22 | Package 230 + 93 pass; app 107 pass; UI S5-UI01 passes (iPhone 17 simulator) | Learning check recorded in EVAL_ENGINE.md (fixture wardrobe; real-wardrobe run pending) | M01–M14 not yet walked on the phone | none known | Built and run on the iPhone 17 by the owner; manual steps still to tick |

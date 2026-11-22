@@ -141,3 +141,14 @@ Gate decision (fill in after rating): _below 8 of 10 passing means Sprint 4 star
 rejected 36, kept 9
   wrongDressCode (36): Beige / cream relaxed jeans; Birkenstock two-strap sandals; Black Adidas Sambas; Black beach sliders; Black graffiti-print t-shirt; Black jeans; Black slim-fit tee; Black windcheater; Bottle green graffiti-print t-shirt; Brown cable-knit polo sweater; Brown linen shirt; Brown mocha linen trousers; Brown polo t-shirt; Burgundy collared t-shirt; Charcoal grey collared half-zip knit; Cream half-zip knit; Cream leather gum-sole sneakers; Cream pyjama; Dark charcoal zip jacket; Dark indigo regular-fit jeans; Forest green cotton-linen shirt; Gold crucifix chain; Grey loose jeans; Mustard embroidered kurta; Navy and green striped rugby polo; Navy corduroy trousers; Navy hoodie; Navy knit open-collar polo; Navy textured t-shirt; Olive corduroy trousers; Rust mandarin-collar shirt; Tan juttis; Teal full-zip hoodie jacket; Terracotta check shirt; White Nike Air Force 1-style sneakers; White slim-fit tee
 ```
+
+## Sprint 5 learning check (2026-11-22)
+
+Automated on the fixture wardrobe (`S5LearningCheckTests`), not yet on your real wardrobe. Five top outfits from casual, date, party, travel and festival were "saved" and the second outfit of each "rejected"; pair weights were computed from those events and the Diwali and office requests re-run.
+
+| Request | Saved pairs in top 3 (before → after) | Mean pairWeight part (before → after) | Clothing pair shared by all 3 |
+|---|---|---|---|
+| Diwali | 4 → 4 | 0.500 → 0.569 | none |
+| Office | 6 → 6 | 0.500 → 0.627 | none |
+
+Reading: learning is gentle. The learned signal reaches the top results (pair part rises) but does not reorder them on this wardrobe, because the saved outfits came from the same engine and were already the best pairs. No pair dominates. Still to do by hand: the same check on your real wardrobe after a week of saves and rejects.

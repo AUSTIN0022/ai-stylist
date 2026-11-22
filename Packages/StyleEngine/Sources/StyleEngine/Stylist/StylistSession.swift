@@ -19,8 +19,11 @@ public struct StylistSession: Sendable {
     public private(set) var softMissing: [Slot] = []
     public init() {}
 
+    /// Learned pair weights (Sprint 5), set by the app before each run.
+    public var pairWeights: [PairKey: Double] = [:]
+
     private func context(_ today: Date, _ seed: UInt64) -> EngineContext {
-        EngineContext(today: today, excludeOutfits: shown, seed: seed, excludeLooks: shownLooks)
+        EngineContext(today: today, excludeOutfits: shown, pairWeights: pairWeights, seed: seed, excludeLooks: shownLooks)
     }
 
     /// New request or edited chip: forget what was shown and build three outfits.

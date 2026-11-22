@@ -52,3 +52,13 @@ import Testing
         #expect(l[.top]!.width > 0 && inside(l[.top]!))
     }
 }
+
+@Suite("S5 card layout fills the card") struct CardLayoutFillTests {
+    let canvas = CGSize(width: 300, height: 333)
+    @Test("wide images use most of the card width; shoes are not tiny") func fills() {
+        let wide = CGSize(width: 400, height: 100)
+        let l = CardLayout.layout([.top: wide, .bottom: wide, .footwear: wide], canvas: canvas)
+        #expect(l[.top]!.width >= 0.9 * canvas.width)
+        #expect(l[.footwear]!.width >= 0.4 * canvas.width)
+    }
+}

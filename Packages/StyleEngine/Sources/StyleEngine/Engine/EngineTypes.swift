@@ -106,6 +106,9 @@ public struct OutfitCandidate: Sendable, Equatable {
     public let slots: [Slot: UUID]
     public let score: Double
     public let scoreParts: [String: Double]
+    public init(slots: [Slot: UUID], score: Double, scoreParts: [String: Double]) {
+        self.slots = slots; self.score = score; self.scoreParts = scoreParts
+    }
     public var key: OutfitKey { OutfitKey(Array(slots.values)) }
     public var itemIds: [UUID] { key.ids }
 }
