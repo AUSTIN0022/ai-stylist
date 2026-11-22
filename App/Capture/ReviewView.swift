@@ -98,7 +98,7 @@ struct ReviewView: View {
                         model.save(p.id, context: context, makeProduct: makeProduct && supportsImagePlayground)
                     }
                 }
-                    .buttonStyle(.borderedProminent).disabled(p.processed == nil)
+                    .buttonStyle(.borderedProminent).disabled(p.processed == nil || model.needsSubcategory(p))
             }
             .buttonStyle(.bordered).padding(16)
         }
@@ -133,6 +133,9 @@ struct ReviewView: View {
                     Spacer()
                     Button("Retake") { model.retake(p.id); camera = .retake(p.id) }.buttonStyle(.bordered).controlSize(.small)
                 }
+            }
+            if let n = model.categoryNote(p) {
+                Label(n, systemImage: "arrow.triangle.2.circlepath").font(.footnote).foregroundStyle(.orange)
             }
             categoryQuestion(p)
             if model.askColor(p) { colorQuestion(p) } else { colourRow(p) }

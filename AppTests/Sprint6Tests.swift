@@ -227,3 +227,64 @@ private final class StubWeather: WeatherSource, @unchecked Sendable {
     #expect(fresh.status == .ready)
     #expect(fresh.readyAt != nil)
 }
+
+// MARK: Adding from a category page (preset category)
+
+@MainActor private func presetModel(_ r: Rig, preset: StyleEngine.Category?, tagger: (any ItemTagger)?) -> ReviewModel {
+    let m = ReviewModel(processor: ItemImageProcessor(cutout: FlatCutout(), store: r.store), store: r.store, tagger: tagger,
+                        presetCategory: preset, scan: { _ in ("", nil) }, isBlurry: { _, _ in false })
+    m.logContext = r.context
+    return m
+}
+
+@MainActor @Test func S6_preset_categoryWinsOverADifferentAIAnswerAndIsFlagged() async throws {
+    let r = try Rig(); defer { r.cleanup() }
+    let m = presetModel(r, preset: .bottom, tagger: FakeTagger())            // the AI says: shirt, a top
+    let id = await add(m)
+    let p = try #require(m.photo(id))
+    #expect(m.effectiveCategory(p) == .bottom)
+    #expect(m.effectiveSubcategory(p) == nil)                                // the AI's "shirt" is not a bottom
+    #expect(m.needsSubcategory(p))
+    let note = try #require(m.categoryNote(p))
+    #expect(note.lowercased().contains("top") && note.lowercased().contains("bottom"))
+    m.answerSubcategory(id, .chinos)
+    #expect(m.needsSubcategory(try #require(m.photo(id))) == false)
+    let item = try #require(m.save(id, context: r.context))
+    #expect(item.tags.category == .bottom)
+    #expect(item.tags.subcategory == .chinos)
+    #expect(item.aiRaw.category == .top)                                     // the AI's answer is kept as it was
+    #expect(item.userOverrides.category == .bottom)                          // and the correction is recorded
+}
+
+@MainActor @Test func S6_preset_whenTheAIAgreesNothingIsOverriddenAndNothingFlagged() async throws {
+    let r = try Rig(); defer { r.cleanup() }
+    let m = presetModel(r, preset: .top, tagger: FakeTagger())               // the AI says: shirt, a top
+    let id = await add(m)
+    let p = try #require(m.photo(id))
+    #expect(m.effectiveCategory(p) == .top && m.effectiveSubcategory(p) == .shirt)
+    #expect(m.categoryNote(p) == nil && m.needsSubcategory(p) == false)
+    let item = try #require(m.save(id, context: r.context))
+    #expect(item.userOverrides.category == nil)
+    #expect(item.tags.category == .top)
+}
+
+@MainActor @Test func S6_preset_worksWithTheAIOff() async throws {
+    let r = try Rig(); defer { r.cleanup() }
+    let m = presetModel(r, preset: .footwear, tagger: nil)
+    let id = await add(m)
+    let p = try #require(m.photo(id))
+    #expect(m.effectiveCategory(p) == .footwear)
+    #expect(m.askCategory(p) == false)
+    #expect(m.needsSubcategory(p))                                           // nothing named the kind of footwear yet
+    m.answerSubcategory(id, .loafers)
+    let item = try #require(m.save(id, context: r.context))
+    #expect(item.tags.category == .footwear && item.tags.subcategory == .loafers)
+}
+
+@MainActor @Test func S6_noPreset_behavesAsBefore() async throws {
+    let r = try Rig(); defer { r.cleanup() }
+    let m = presetModel(r, preset: nil, tagger: FakeTagger())
+    let id = await add(m)
+    let p = try #require(m.photo(id))
+    #expect(m.effectiveCategory(p) == .top && m.categoryNote(p) == nil && m.needsSubcategory(p) == false)
+}

@@ -17,6 +17,9 @@ struct ContentView: View {
             // Fetch explicitly: if the fetch fails, delete nothing.
             guard let items = try? context.fetch(FetchDescriptor<Item>()) else { return }
             env.store.removeOrphans(keeping: Set(items.map(\.id)))
+            // Build any missing outfit stickers in the background, one at a time, so no card waits for a cut-out when it is first opened.
+            let (ids, store) = (items.map(\.id), env.store)
+            Task.detached(priority: .utility) { await StickerMaker.prewarm(ids: ids, store: store, cutout: VisionCutoutService()) }
         }
     }
 }

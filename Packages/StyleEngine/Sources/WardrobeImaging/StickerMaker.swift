@@ -53,23 +53,86 @@ public enum StickerMaker {
         (try? FileManager.default.attributesOfItem(atPath: url.path))?[.modificationDate] as? Date
     }
 
-    /// The sticker for an item, built when missing or older than its source. Source: the product photo (cut out with `cutout`),
-    /// else the saved cut-out. nil when there is neither (or the product photo has no clear subject): callers show the plain image.
-    public static func image(for id: UUID, store: ImageStore, cutout: CutoutProviding, maxPixel: Int) async -> CGImage? {
-        let sticker = store.url(for: ImageStore.stickerName, id: id)
-        let product = store.url(for: ImageStore.productName, id: id), cut = store.url(for: ImageStore.cutoutName, id: id)
+    /// Decoded stickers, so reopening a card or the builder costs no disk read. Keyed by file, modification time and size.
+    private nonisolated(unsafe) static let memory = NSCache<NSString, CGImage>()
+    /// One cut-out at a time, one job per item (see `StickerGate`).
+    private static let gate = StickerGate()
+
+    private enum Quick { case hit(CGImage), skip, miss }
+
+    private static func source(for id: UUID, store: ImageStore) -> (url: URL, date: Date, isProduct: Bool)? {
         let fm = FileManager.default
-        let source = fm.fileExists(atPath: product.path) ? product : fm.fileExists(atPath: cut.path) ? cut : nil
-        guard let source, let sourceDate = modified(source) else { return nil }
-        if let d = modified(sticker), d >= sourceDate, let img = ImageCodec.thumbnail(at: sticker, maxPixel: maxPixel) { return img }
-        guard let full = ImageCodec.thumbnail(at: source, maxPixel: 1200) else { return nil }
+        let product = store.url(for: ImageStore.productName, id: id), cut = store.url(for: ImageStore.cutoutName, id: id)
+        if fm.fileExists(atPath: product.path), let d = modified(product) { return (product, d, true) }
+        if fm.fileExists(atPath: cut.path), let d = modified(cut) { return (cut, d, false) }
+        return nil
+    }
+
+    /// Everything that needs no cut-out: a fresh sticker file (via memory), or a fresh "no clear subject" marker.
+    private static func quick(_ id: UUID, _ store: ImageStore, _ maxPixel: Int) -> Quick {
+        guard let src = source(for: id, store: store) else { return .miss }
+        let sticker = store.url(for: ImageStore.stickerName, id: id)
+        if let d = modified(sticker), d >= src.date, let img = decodeCaching(sticker, modified: d, maxPixel) { return .hit(img) }
+        if let d = modified(store.url(for: ImageStore.stickerSkipName, id: id)), d >= src.date { return .skip }
+        return .miss
+    }
+
+    /// The sticker for an item. Source: the product photo (cut out with `cutout`), else the saved cut-out. Built when missing or older
+    /// than its source, one at a time, once per item. nil when there is no source, or the product photo has no clear subject (that is
+    /// remembered until the photo changes): callers then show the plain image. Never runs its work on the caller's actor.
+    public static func image(for id: UUID, store: ImageStore, cutout: CutoutProviding, maxPixel: Int) async -> CGImage? {
+        switch await Task.detached(priority: .userInitiated, operation: { quick(id, store, maxPixel) }).value {
+        case .hit(let img): return img
+        case .skip: return nil
+        case .miss: return await gate.build(id: id, store: store, cutout: cutout, maxPixel: maxPixel)
+        }
+    }
+
+    /// Builds the missing stickers in the background, one after another (call at launch, at low priority).
+    public static func prewarm(ids: [UUID], store: ImageStore, cutout: CutoutProviding) async {
+        for id in ids { _ = await image(for: id, store: store, cutout: cutout, maxPixel: 200) }
+    }
+
+    fileprivate static func make(_ id: UUID, _ store: ImageStore, _ cutout: CutoutProviding, _ maxPixel: Int) async -> CGImage? {
+        guard let src = source(for: id, store: store), let full = ImageCodec.thumbnail(at: src.url, maxPixel: 1200) else { return nil }
+        let sticker = store.url(for: ImageStore.stickerName, id: id), skip = store.url(for: ImageStore.stickerSkipName, id: id)
         let base: CGImage
-        if source == product {
-            guard let r = try? await cutout.cutout(from: full) else { return nil }
+        if src.isProduct {
+            guard let r = try? await cutout.cutout(from: full) else {
+                try? store.save(Data(), named: ImageStore.stickerSkipName, for: id)      // remember: do not retry until the photo changes
+                return nil
+            }
             base = r.cutout
         } else { base = full }
         guard let made = outlined(base), let png = ImageCodec.pngData(made) else { return nil }
         try? store.save(png, named: ImageStore.stickerName, for: id)
-        return ImageCodec.thumbnail(at: sticker, maxPixel: maxPixel) ?? made
+        try? FileManager.default.removeItem(at: skip)
+        return modified(sticker).flatMap { decodeCaching(sticker, modified: $0, maxPixel) } ?? made
+    }
+
+    /// The sticker file decoded at `maxPixel`, from memory when it was decoded before (same file, same time, same size).
+    private static func decodeCaching(_ url: URL, modified d: Date, _ maxPixel: Int) -> CGImage? {
+        let key = "\(url.path)|\(d.timeIntervalSince1970)|\(maxPixel)" as NSString
+        if let img = memory.object(forKey: key) { return img }
+        guard let img = ImageCodec.thumbnail(at: url, maxPixel: maxPixel) else { return nil }
+        memory.setObject(img, forKey: key)
+        return img
+    }
+}
+
+/// Runs sticker builds one at a time (a Vision cut-out is heavy) and once per item however many views ask.
+private actor StickerGate {
+    private var inflight: [UUID: Task<CGImage?, Never>] = [:]
+    private var tail: Task<Void, Never>?
+
+    func build(id: UUID, store: ImageStore, cutout: CutoutProviding, maxPixel: Int) async -> CGImage? {
+        if let running = inflight[id] { return await running.value }
+        let prior = tail
+        let job = Task<CGImage?, Never> { await prior?.value; return await StickerMaker.make(id, store, cutout, maxPixel) }
+        inflight[id] = job
+        tail = Task { _ = await job.value }
+        let result = await job.value
+        inflight[id] = nil
+        return result
     }
 }

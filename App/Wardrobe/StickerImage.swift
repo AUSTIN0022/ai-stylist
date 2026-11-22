@@ -27,7 +27,7 @@ struct StickerImage: View {
         let (id, store, cutFile, display) = (item.id, store, item.cutoutFile, item.displayFile)
         if let s = await StickerMaker.image(for: id, store: store, cutout: VisionCutoutService(), maxPixel: 700) { image = s; isSticker = true; return }
         let urls = [store.url(for: ImageStore.productName, id: id), cutFile.map { store.url(for: $0, id: id) }, store.url(for: display, id: id)].compactMap { $0 }
-        image = await Task.detached { urls.lazy.filter { FileManager.default.fileExists(atPath: $0.path) }.compactMap { ImageCodec.thumbnail(at: $0, maxPixel: 700) }.first }.value
+        image = await Task.detached { urls.lazy.filter { FileManager.default.fileExists(atPath: $0.path) }.compactMap { ImageCodec.cachedThumbnail(at: $0, maxPixel: 700) }.first }.value
         isSticker = false
     }
 }

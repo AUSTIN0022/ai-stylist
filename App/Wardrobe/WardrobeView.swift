@@ -9,9 +9,7 @@ struct WardrobeView: View {
     @Environment(\.modelContext) private var context
     @Environment(AppEnvironment.self) private var env
     @State private var review: ReviewModel?
-    @State private var fromCamera: ReviewModel?   // opened once the camera has dismissed
-    @State private var picked: [PhotosPickerItem] = []
-    @State private var showCamera = false
+    @State private var showAdd = false
     @State private var filter = WardrobeFilter()
     @State private var showSettings = false
     @State private var selecting = false
@@ -108,7 +106,8 @@ struct WardrobeView: View {
             .navigationTitle("Wardrobe")
             .searchable(text: $filter.text, prompt: "Search name, brand, colour")
             .navigationDestination(for: SectionRoute.self) { route in
-                CategoryPage(title: route.title, items: sections.first { $0.title == route.title }?.items ?? [], cell: cell)
+                CategoryPage(title: route.title, items: sections.first { $0.title == route.title }?.items ?? [],
+                             preset: StyleEngine.Category.allCases.first { $0.displayName == route.title }, cell: cell)
             }
             .navigationDestination(for: UUID.self) { id in
                 if let item = items.first(where: { $0.id == id }) { ItemDetailView(item: item) }
@@ -119,10 +118,7 @@ struct WardrobeView: View {
                 }
                 ToolbarItemGroup(placement: .primaryAction) {
                     Button(selecting ? "Done" : "Select") { selecting.toggle(); chosen = []; linkMessage = nil }
-                    Button { showCamera = true } label: { Label("Camera", systemImage: "camera") }
-                    PhotosPicker(selection: $picked, maxSelectionCount: 20, matching: .images) {
-                        Label("Photo library", systemImage: "photo.on.rectangle")
-                    }
+                    Button { showAdd = true } label: { Label("Add items", systemImage: "plus") }
                 }
             }
             .safeAreaInset(edge: .bottom) {
@@ -142,26 +138,12 @@ struct WardrobeView: View {
                     }.padding().frame(maxWidth: .infinity).background(.bar)
                 }
             }
-            .onChange(of: picked) { _, new in
-                guard !new.isEmpty else { return }
-                let chosen = new
-                picked = []
-                let m = ReviewModel.live(env)
-                m.begin(count: chosen.count) { i in try? await chosen[i].loadTransferable(type: Data.self) }
-                review = m
-            }
-            .fullScreenCover(isPresented: $showCamera, onDismiss: { review = fromCamera; fromCamera = nil }) {
-                CameraView { shots in
-                    let m = ReviewModel.live(env)
-                    m.begin(count: shots.count, box: { shots[$0].box }) { shots[$0].data }
-                    fromCamera = m
-                }
-            }
             .fullScreenCover(item: $review, onDismiss: {
                 guard let ids = lastReview?.takeProductQueue(), !ids.isEmpty else { return }
                 Task { await shot.makeQueued(ids, context: context) }
             }) { m in ReviewView(model: m).onAppear { lastReview = m } }
             .productShotSheet(shot)
+            .addItemsFlow(trigger: $showAdd)
             .sheet(isPresented: $showSettings) { SettingsView(env: env) }
         }
     }
@@ -244,13 +226,18 @@ struct SectionRoute: Hashable { let title: String }
 struct CategoryPage<Cell: View>: View {
     let title: String
     let items: [Item]
+    /// The category this page lists: the "+" adds into it (nil for Unsorted).
+    var preset: StyleEngine.Category?
     let cell: (Item) -> Cell
+    @State private var showAdd = false
     private let columns = [GridItem(.adaptive(minimum: 104), spacing: 8)]
     var body: some View {
         ScrollView {
             LazyVGrid(columns: columns, spacing: 8) { ForEach(items) { cell($0) } }.padding(16)
         }
         .navigationTitle(title).navigationBarTitleDisplayMode(.inline)
+        .toolbar { ToolbarItem(placement: .primaryAction) { Button { showAdd = true } label: { Label(preset.map { "Add to \($0.displayName)" } ?? "Add items", systemImage: "plus") } } }
+        .addItemsFlow(trigger: $showAdd, preset: preset)
         .overlay { if items.isEmpty { ContentUnavailableView("Nothing here", systemImage: "tshirt") } }
     }
 }

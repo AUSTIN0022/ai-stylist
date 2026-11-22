@@ -22,7 +22,7 @@ struct FileImage: View {
         }
         .task(id: "\(url.path)#\(reloads)") {
             let (u, m) = (FileManager.default.fileExists(atPath: url.path) ? url : (fallback ?? url), maxPixel)
-            image = await Task.detached { ImageCodec.thumbnail(at: u, maxPixel: m) }.value
+            image = await Task.detached { ImageCodec.cachedThumbnail(at: u, maxPixel: m) }.value
         }
         .onReceive(NotificationCenter.default.publisher(for: .itemImagesChanged)) { n in
             if let id = n.object as? UUID, url.path.contains(id.uuidString) { reloads += 1 }

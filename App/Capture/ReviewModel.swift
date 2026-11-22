@@ -36,16 +36,18 @@ import WardrobeImaging
     private let pipeline: LabelPipeline
     private let queue: TaggingQueue?
     private let prints: any FeaturePrinting
+    /// Set when the review was opened from a category page: every new photo starts in that category.
+    private let presetCategory: Category?
     private var tasks: [Task<Void, Never>] = []
     /// Where AI call rows are written. Rows made before it is set are kept and written when it arrives.
     var logContext: ModelContext? { didSet { flushLogs() } }
     private var pendingLogs: [AIRequestLog] = []
 
     init(processor: ItemImageProcessor, store: ImageStore, tagger: (any ItemTagger)? = nil, queue: TaggingQueue? = nil,
-         prints: any FeaturePrinting = VisionFeaturePrinting(),
+         prints: any FeaturePrinting = VisionFeaturePrinting(), presetCategory: Category? = nil,
          scan: @escaping @Sendable (CGImage) async throws -> (text: String, barcode: String?) = LabelScanner.scan,
          isBlurry: @escaping @Sendable (CGImage, CGRect?) -> Bool = { QualityCheck.isBlurry($0, region: $1) }) {
-        self.store = store; self.queue = queue; self.prints = prints
+        self.store = store; self.queue = queue; self.prints = prints; self.presetCategory = presetCategory
         capture = CaptureProcessor(processor: processor, store: store)
         tagging = tagger.map(TaggingCoordinator.init(tagger:))
         saver = ReviewSaver(store: store)
@@ -53,9 +55,9 @@ import WardrobeImaging
     }
 
     /// The review the app opens: Vision cut-out, the environment's tagger and background queue.
-    static func live(_ env: AppEnvironment) -> ReviewModel {
+    static func live(_ env: AppEnvironment, presetCategory: Category? = nil) -> ReviewModel {
         ReviewModel(processor: ItemImageProcessor(cutout: VisionCutoutService(), store: env.store), store: env.store,
-                    tagger: env.provider.makeTagger(), queue: env.tagging)
+                    tagger: env.provider.makeTagger(), queue: env.tagging, presetCategory: presetCategory)
     }
 
     // MARK: derived
@@ -68,6 +70,8 @@ import WardrobeImaging
     // MARK: questions (see ReviewQuestions)
     func askColor(_ p: Photo) -> Bool { ReviewQuestions.askColor(p) }
     func askCategory(_ p: Photo) -> Bool { ReviewQuestions.askCategory(p) }
+    func needsSubcategory(_ p: Photo) -> Bool { ReviewQuestions.needsSubcategory(p) }
+    func categoryNote(_ p: Photo) -> String? { ReviewQuestions.categoryNote(p) }
     func askFit(_ p: Photo) -> Bool { ReviewQuestions.askFit(p) }
     func effectiveCategory(_ p: Photo) -> Category? { ReviewQuestions.effectiveCategory(p) }
     func effectiveSubcategory(_ p: Photo) -> Subcategory? { ReviewQuestions.effectiveSubcategory(p) }
@@ -107,7 +111,7 @@ import WardrobeImaging
     /// Photos are loaded and processed one at a time. `box` is the camera guide for that shot (nil for library picks).
     func begin(count: Int, box: @escaping (Int) -> CGRect? = { _ in nil }, load: @escaping @MainActor (Int) async -> Data?) {
         let start = photos.count
-        photos += (0..<count).map { _ in Photo() }
+        photos += (0..<count).map { _ in Photo(preset: presetCategory) }
         let ids = photos[start...].map(\.id)
         analysing = true
         tasks.append(Task {
@@ -218,6 +222,10 @@ import WardrobeImaging
     private func gotIdentity(_ id: UUID, _ itemID: UUID, _ a: IdentityTags, _ version: String) {
         guard let i = index(id, itemID) else { return }
         photos[i].ai = a; photos[i].aiVersion = version
+        if let preset = photos[i].presetCategory {          // the category page's answer stands; the AI's is cross-checked against it
+            photos[i].overrides.category = preset == a.category ? nil : preset
+            if preset != a.category { photos[i].overrides.subcategory = nil; photos[i].showAllChoices = true }
+        }
         refreshDuplicate(id)
     }
 
@@ -258,7 +266,7 @@ import WardrobeImaging
         guard let i = photos.firstIndex(where: { $0.id == id }) else { return }
         if photos[i].existingID != nil { retakeID = id; return }   // saved item: keep everything until the new photo arrives
         capture.discard(photos[i].processed)
-        photos[i] = Photo(); photos[i].id = id
+        photos[i] = Photo(preset: presetCategory); photos[i].id = id
         retakeID = id
     }
     func cancelRetake() { retakeID = nil }   // camera dismissed without a shot: slot is empty, user can retake again or discard

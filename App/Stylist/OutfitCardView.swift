@@ -26,8 +26,7 @@ struct OutfitCardView: View {
                             .shadow(color: .black.opacity(0.18), radius: 2, y: 1)
                             .frame(width: r.width, height: r.height)
                             .overlay { if selected == slot { RoundedRectangle(cornerRadius: 6).stroke(.tint, lineWidth: 2) } }
-                            .contentShape(Rectangle())
-                            .onTapGesture { onSelect?(slot) }
+                            .modifier(SlotTap(slot: slot, onSelect: onSelect))
                             .position(x: r.midX, y: r.midY)
                     }
                     // Names on their own top layer: never covered by a neighbouring item, never cut to the item's width.
@@ -64,8 +63,18 @@ struct OutfitCardView: View {
             guard let item = items[id] else { continue }
             if let sticker = await StickerMaker.image(for: id, store: store, cutout: VisionCutoutService(), maxPixel: 600) { out[slot] = sticker; continue }
             let urls = [store.url(for: ImageStore.productName, id: id), item.cutoutFile.map { store.url(for: $0, id: id) }, store.url(for: item.displayFile, id: id)].compactMap { $0 }
-            out[slot] = await Task.detached { urls.lazy.filter { FileManager.default.fileExists(atPath: $0.path) }.compactMap { ImageCodec.thumbnail(at: $0, maxPixel: 400) }.first }.value
+            out[slot] = await Task.detached { urls.lazy.filter { FileManager.default.fileExists(atPath: $0.path) }.compactMap { ImageCodec.cachedThumbnail(at: $0, maxPixel: 400) }.first }.value
         }
         images = out
+    }
+}
+
+/// Slot images take taps only when the card has a listener (swap selection). Without one they must not swallow the tap meant for
+/// the card itself (a saved-outfit grid cell is a NavigationLink).
+private struct SlotTap: ViewModifier {
+    let slot: Slot
+    let onSelect: ((Slot) -> Void)?
+    func body(content: Content) -> some View {
+        if let onSelect { content.contentShape(Rectangle()).onTapGesture { onSelect(slot) } } else { content.allowsHitTesting(false) }
     }
 }

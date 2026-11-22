@@ -27,6 +27,19 @@ public enum ImageCodec {
         ] as CFDictionary)
     }
 
+    private nonisolated(unsafe) static let thumbnails = NSCache<NSString, CGImage>()
+
+    /// `thumbnail(at:maxPixel:)` remembered in memory per file, modification time and size, so a grid that scrolls back or a screen
+    /// that reopens decodes nothing. A rewritten file (new time) is decoded again. nil when the file cannot be read.
+    public static func cachedThumbnail(at url: URL, maxPixel: Int) -> CGImage? {
+        guard let d = (try? FileManager.default.attributesOfItem(atPath: url.path))?[.modificationDate] as? Date else { return nil }
+        let key = "\(url.path)|\(d.timeIntervalSince1970)|\(maxPixel)" as NSString
+        if let hit = thumbnails.object(forKey: key) { return hit }
+        guard let img = thumbnail(at: url, maxPixel: maxPixel) else { return nil }
+        thumbnails.setObject(img, forKey: key)
+        return img
+    }
+
     public static func jpegData(_ image: CGImage, quality: Double = 0.9) -> Data? {
         // JPEG has no alpha: flatten onto white first.
         let flat = Compositor.flattenedOnWhite(image)

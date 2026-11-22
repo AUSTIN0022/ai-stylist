@@ -25,6 +25,7 @@ extension ReviewModel {
         var featurePrint: Data?             // Vision print of the cut-out; saved on the item for the duplicate check
         var duplicate: DuplicateOffer?      // an existing item this photo may repeat; nil once answered or when none is close
         var duplicateDismissed = false      // the user said "Different"
+        var presetCategory: Category?       // added from a category page: that category is the answer; the AI's is only cross-checked
         var existingID: UUID?               // Review again: the saved item this page edits in place (nil for a new photo)
 
         /// The AI's whole answer for the page (calls A, B and C).
@@ -35,6 +36,12 @@ extension ReviewModel {
         }
         /// aiRaw < label < the user's corrections, as the item will read after Save.
         var effectiveTags: ItemTags { ItemTags.effective(aiRaw: rawTags, label: label, userOverrides: overrides) }
+
+        /// A new photo; with `preset` it starts in that category (it is the user's answer, stored as a correction only if the AI differs).
+        init(preset: Category? = nil) {
+            presetCategory = preset
+            overrides.category = preset
+        }
 
         /// A page for a saved item (Review again / Sort these), loaded from its stored files, tags and label.
         init(existing item: Item) {
@@ -60,6 +67,5 @@ extension ReviewModel {
             }
             status = .ready
         }
-        init() {}
     }
 }

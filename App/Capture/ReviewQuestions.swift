@@ -7,7 +7,22 @@ enum ReviewQuestions {
     /// Ask whenever neither the AI nor the user has given a category.
     static func askCategory(_ p: ReviewModel.Photo) -> Bool { p.processed != nil && effectiveCategory(p) == nil }
     static func effectiveCategory(_ p: ReviewModel.Photo) -> Category? { p.overrides.category ?? p.ai?.category }
-    static func effectiveSubcategory(_ p: ReviewModel.Photo) -> Subcategory? { p.overrides.subcategory ?? p.ai?.subcategory }
+    /// The kind of item, but only when it belongs to the category in force (the AI's "shirt" is no answer for a page added under Bottoms).
+    static func effectiveSubcategory(_ p: ReviewModel.Photo) -> Subcategory? {
+        guard let s = p.overrides.subcategory ?? p.ai?.subcategory else { return nil }
+        guard let c = effectiveCategory(p) else { return s }
+        return subcategories(for: c).contains(s) ? s : nil
+    }
+    /// A category added from a category page still needs a kind that fits it before Save (the AI named none that fits, or no AI ran).
+    static func needsSubcategory(_ p: ReviewModel.Photo) -> Bool {
+        guard p.presetCategory != nil, p.processed != nil, effectiveCategory(p) != nil else { return false }
+        return effectiveSubcategory(p) == nil
+    }
+    /// The cross-check: the AI named another category than the page it was added under.
+    static func categoryNote(_ p: ReviewModel.Photo) -> String? {
+        guard let preset = p.presetCategory, let ai = p.ai, ai.category != preset else { return nil }
+        return "The AI thinks this is a \(ai.category.displayName.lowercased()) (\(ai.subcategory.displayName.lowercased())). It will be saved under \(preset.displayName) because you added it there. Pick what it is below."
+    }
     /// The AI's answer as one chip plus up to two alternatives from its category; nil when there is none or the user chose "Something else".
     static func suggestion(_ p: ReviewModel.Photo) -> (title: String, alternatives: [Subcategory])? {
         guard let ai = p.ai, !p.showAllChoices else { return nil }
