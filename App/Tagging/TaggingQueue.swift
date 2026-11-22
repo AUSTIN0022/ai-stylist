@@ -97,7 +97,7 @@ actor TaggingQueue {
     private func process(_ id: UUID) async {
         guard let item = fetch(id) else { return }
         guard unavailable == nil else {   // model off: the item stays usable, untagged
-            item.status = .ready; item.lastError = nil; try? context.save(); return
+            item.status = .ready; item.readyAt = item.readyAt ?? .now; item.lastError = nil; try? context.save(); return
         }
         item.status = .tagging; item.lastError = nil
         let url = store.url(for: item.cutoutFile ?? item.originalFile, id: id)
@@ -109,7 +109,7 @@ actor TaggingQueue {
                     try await TaggingRun.run(tagger: tagger, cutout: img, sink: { await self.add($0) })
                 }
                 item.replaceRaw(raw, version: tagger.version, context: nil)
-                item.status = .ready
+                item.status = .ready; item.readyAt = item.readyAt ?? .now
             } catch {
                 item.status = .failed; item.lastError = describe(error)
             }

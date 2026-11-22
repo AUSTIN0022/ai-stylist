@@ -20,3 +20,12 @@ Every AI call goes through `AICall.record`, which writes purpose, provider, mode
 3. In `AIStylistApp.init`, change `AppleOnDeviceProvider()` to `<Vendor>Provider()`. Nothing else changes.
 4. Before any other person's photos are processed, CLAUDE.md requires a paid provider and per-user caps: add the cap in the adapter (or a wrapping provider) first. Keep sending only the cut-out once per upload, never per outfit request.
 5. Tests: use `FakeAIProvider` (AppTests) in an `AppEnvironment`; never call the real model in unit tests. Measure quality with the evals in `docs/TEST_PLAN.md`.
+
+## Sprint 5–6 additions
+- **Outfit builder** state is plain data in StyleEngine (`OutfitCanvas`, `OutfitSlots`): positions are fractions of the canvas, every gesture ends in one call, so it is unit-tested. `OutfitSaver.saveManual` writes the outfit, its rows and a `saved` event.
+- **Learning**: `PairWeights.compute(events)` (StyleEngine) is the only place weights come from. The app turns `FeedbackEvent` and `WearLog` rows into events (`Learning.events`) and recomputes on every Stylist run; nothing is stored.
+- **Stickers**: `StickerMaker` (WardrobeImaging) cuts the product photo out with Vision, trims it and adds a white outline; cached as `sticker.png` per item and rebuilt when the product photo is newer. Cards and the builder canvas draw `StickerImage`.
+- **Duplicate check**: `FeaturePrint` (Vision) per cut-out, stored on `Item.featurePrintData`; `DuplicateCheck.match` (StyleEngine) decides from distances; `ReviewModel` shows the "Is this the same as…?" card.
+- **Weather**: `TodaysWeather` (StyleEngine) takes a `WeatherSource` (app: `OpenMeteoSource` + `CoarseLocation`), caches per day, times out to `unknown`, never throws. `StylistViewModel` uses it as the default `weatherFeel` for the first intent of a session.
+- **Metrics**: `MVPMetrics` and `RatingSheet` (StyleEngine, plain records in and markdown out); Settings → MVP metrics and Rate the engine are thin screens over them.
+- **UI tests**: `-uiTesting` (DEBUG only) starts an in-memory seeded store with an always-unavailable AI provider; `UITests/` is the XCUITest target.

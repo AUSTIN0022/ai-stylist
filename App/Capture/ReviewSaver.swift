@@ -26,6 +26,7 @@ import WardrobeImaging
             item.hexColors = p.hexColors; item.colorNames = p.colorNames.map(\.rawValue)
             item.cutoutFailed = p.cutoutFailed; item.lastError = p.lastError
         }
+        if let fp = photo.featurePrint { item.featurePrintData = fp }
         if let c = photo.colorAnswer { item.setColour(c, context: nil) }
         if photo.ai != nil, let v = photo.aiVersion {
             let raw = photo.rawTags
@@ -37,6 +38,7 @@ import WardrobeImaging
         if handOffToQueue { item.status = .tagging }
         else if case .failed(let e) = photo.tagState, !modelOff { item.status = .failed; item.lastError = e }
         else { item.status = .ready }
+        if item.status == .ready, item.readyAt == nil { item.readyAt = .now }
         if existing == nil { context.insert(item) }
         try? context.save()
         if p.cutoutFile != nil { FabricSwatch.save(for: item.id, store: store) }   // colour and texture reference; nil patch = none

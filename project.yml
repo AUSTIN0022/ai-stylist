@@ -35,6 +35,7 @@ targets:
         GENERATE_INFOPLIST_FILE: YES
         INFOPLIST_KEY_UILaunchScreen_Generation: YES
         INFOPLIST_KEY_NSCameraUsageDescription: "Take photos of your clothes to add them to your wardrobe."
+        INFOPLIST_KEY_NSLocationWhenInUseUsageDescription: "Your approximate location is used once a day to look up today's weather, so outfit suggestions suit it. Nothing else is shared."
         INFOPLIST_KEY_NSPhotoLibraryUsageDescription: "Pick photos of your clothes to add them to your wardrobe."
   AIStylistTests:
     type: bundle.unit-test

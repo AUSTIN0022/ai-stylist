@@ -148,4 +148,4 @@ Targets: an outfit request on 14 consecutive days; no crash or data loss in any 
 
 | Date | Automated | Evals | Manual | Open defects | Notes |
 |---|---|---|---|---|---|
-| | | | | | |
+| 2026-11-22 | Buildable part done: S6-U01–U10 and S6-I01, I02, I04 pass (package + app); S6-I03 passes on the Mac with synthetic images, not yet on real shirt photos | Not run: needs your wardrobe | Not run | none known | Built so far: duplicate check, weather, MVP metrics screen, rating-sheet screen, EVAL_MVP.md and DOGFOOD_NOTES.md templates. Needs you: add the wardrobe, rate, tune, dogfood, wider garment photos. S6-R01–R05 await the annoyance list. |

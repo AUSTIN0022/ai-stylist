@@ -22,6 +22,9 @@ extension ReviewModel {
         var label: LabelData?               // confirmed; label.jpg already in the item folder
         var labelScan: LabelData?           // the same label as the scanner parsed it, before the user's edits
         var error: String?                  // last re-cut problem
+        var featurePrint: Data?             // Vision print of the cut-out; saved on the item for the duplicate check
+        var duplicate: DuplicateOffer?      // an existing item this photo may repeat; nil once answered or when none is close
+        var duplicateDismissed = false      // the user said "Different"
         var existingID: UUID?               // Review again: the saved item this page edits in place (nil for a new photo)
 
         /// The AI's whole answer for the page (calls A, B and C).

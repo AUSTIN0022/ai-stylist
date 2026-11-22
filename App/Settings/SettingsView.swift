@@ -112,6 +112,8 @@ struct SettingsView: View {
                 Section {
                     NavigationLink("Accuracy") { AccuracyView() }
                     NavigationLink("AI log") { AILogView() }
+                    NavigationLink("MVP metrics") { MVPMetricsView() }
+                    NavigationLink("Rate the engine") { RatingSheetView() }
                 }
                 Section("Developer") {
                     Picker("Product photo prompt", selection: $promptStyle) {

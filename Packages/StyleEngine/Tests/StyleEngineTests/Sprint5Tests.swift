@@ -183,11 +183,16 @@ struct S5PairWeightTests {
         let chinos = mk("Black chinos", .bottom, .chinos, [.black])
         let shoes = mk("Shoes", .footwear, .loafers, [.tan])
         let all = [shirt, linen, chinos, shoes]
-        let before = run(.diwali, all, ctx(pairs: [:]), count: 5)
-        let ws = PairWeights.compute(Array(repeating: .saved([shirt.id, linen.id]), count: 3))
-        let after = run(.diwali, all, ctx(pairs: ws), count: 5)
+        // `variety` is a seeded hash of the item ids (random here, since the ids are): zero it so only the learned pair can differ.
+        var weights = ScoreWeights(); weights.variety = 0
+        func result(_ pairs: [PairKey: Double]) -> EngineResult {
+            OutfitEngine.generate(intent: .diwali, items: all, context: ctx(pairs: pairs), count: 5, weights: weights)
+        }
         func rank(_ r: EngineResult, _ id: UUID) -> Int? { r.outfits.firstIndex { $0.slots.values.contains(id) && $0.slots.values.contains(shirt.id) } }
-        #expect(rank(before, linen.id) != nil && rank(after, linen.id) == 0)
+        let ws = PairWeights.compute(Array(repeating: .saved([shirt.id, linen.id]), count: 3))
+        let after = result(ws)
+        #expect(rank(result([:]), linen.id) != nil && rank(result([:]), chinos.id) != nil)
+        #expect(rank(after, linen.id) == 0)
         #expect((rank(after, chinos.id) ?? 99) > 0)
     }
 }

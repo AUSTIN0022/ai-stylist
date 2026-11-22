@@ -35,15 +35,17 @@ import WardrobeImaging
     private let saver: ReviewSaver
     private let pipeline: LabelPipeline
     private let queue: TaggingQueue?
+    private let prints: any FeaturePrinting
     private var tasks: [Task<Void, Never>] = []
     /// Where AI call rows are written. Rows made before it is set are kept and written when it arrives.
     var logContext: ModelContext? { didSet { flushLogs() } }
     private var pendingLogs: [AIRequestLog] = []
 
     init(processor: ItemImageProcessor, store: ImageStore, tagger: (any ItemTagger)? = nil, queue: TaggingQueue? = nil,
+         prints: any FeaturePrinting = VisionFeaturePrinting(),
          scan: @escaping @Sendable (CGImage) async throws -> (text: String, barcode: String?) = LabelScanner.scan,
          isBlurry: @escaping @Sendable (CGImage, CGRect?) -> Bool = { QualityCheck.isBlurry($0, region: $1) }) {
-        self.store = store; self.queue = queue
+        self.store = store; self.queue = queue; self.prints = prints
         capture = CaptureProcessor(processor: processor, store: store)
         tagging = tagger.map(TaggingCoordinator.init(tagger:))
         saver = ReviewSaver(store: store)
@@ -149,8 +151,36 @@ import WardrobeImaging
         photos[i].error = failure
         photos[i].status = out == nil ? .failed : .ready
         photos[i].ai = nil; photos[i].aiMore = ItemTags(); photos[i].aiVersion = nil; photos[i].tagState = .idle
-        if let out { startTagging(id, itemID: out.itemID) }
+        if let out {
+            startTagging(id, itemID: out.itemID)
+            await computePrint(id, out)
+        }
     }
+
+    // MARK: duplicate check
+    /// The cut-out's feature print (off the main thread), then the check against what is already in the wardrobe.
+    private func computePrint(_ id: UUID, _ out: ProcessedImages) async {
+        let (url, prints) = (store.url(for: out.displayFile, id: out.itemID), prints)
+        let data = await Task.detached { ImageCodec.thumbnail(at: url, maxPixel: 512).flatMap { prints.compute(from: $0) } }.value
+        update(id) { $0.featurePrint = data }
+        refreshDuplicate(id)
+    }
+
+    /// Sets or clears the offer. Runs when the print arrives and again when the AI names the subcategory (only like is compared with like).
+    private func refreshDuplicate(_ id: UUID) {
+        guard let p = photo(id), p.existingID == nil, !p.duplicateDismissed, let print = p.featurePrint, let c = logContext else { return }
+        let items = (try? c.fetch(FetchDescriptor<Item>())) ?? []
+        let byId = Dictionary(items.map { ($0.id, $0) }, uniquingKeysWith: { a, _ in a })
+        let match = DuplicateCheck.match(subcategory: effectiveSubcategory(p),
+                                         among: items.map { DuplicateCandidate(id: $0.id, subcategory: $0.tags.subcategory) },
+                                         distance: { [prints] in byId[$0]?.featurePrintData.flatMap { prints.distance(print, $0) } })
+        update(id) { $0.duplicate = match.flatMap { m in byId[m.id].map { DuplicateOffer(itemID: $0.id, name: $0.name, distance: m.distance) } } }
+    }
+
+    /// "Different": keep both; the question is not asked again for this photo.
+    func keepBoth(_ id: UUID) { update(id) { $0.duplicate = nil; $0.duplicateDismissed = true } }
+    /// "Same": the new photo is thrown away (files deleted); the existing item stays as it is.
+    func discardAsDuplicate(_ id: UUID) { discard(id) }
 
     // MARK: live tagging
     /// Waits for a photo's tagging, at most `tagTimeout`; on timeout it is cancelled and the photo shows as failed (manual questions stay).
@@ -188,6 +218,7 @@ import WardrobeImaging
     private func gotIdentity(_ id: UUID, _ itemID: UUID, _ a: IdentityTags, _ version: String) {
         guard let i = index(id, itemID) else { return }
         photos[i].ai = a; photos[i].aiVersion = version
+        refreshDuplicate(id)
     }
 
     /// Re-tag: the AI answers again; the user's corrections stay.

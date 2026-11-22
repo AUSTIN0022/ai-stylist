@@ -5,18 +5,8 @@ import Testing
 /// E-ENG: prints the top 3 for the 10 rating occasions (SPRINT_6_TESTS.md) with score parts.
 /// `WRITE_EVAL=/path/body.md swift test --filter E-ENG` also writes the markdown tables there (pasted into docs/EVAL_ENGINE.md).
 @Suite("E-ENG") struct EngineEvalTests {
-    static let rated: [(String, OccasionIntent)] = [
-        ("Office, normal day", .init(occasion: .office, weatherFeel: .mild)),
-        ("Interview", .init(occasion: .interview, weatherFeel: .mild)),
-        ("Date night", .init(occasion: .date, timeOfDay: .evening, weatherFeel: .mild)),
-        ("House party", .init(occasion: .party, timeOfDay: .evening, setting: .indoor, weatherFeel: .mild)),
-        ("Diwali at a friend's, evening, indoors", .diwali),
-        ("Wedding guest", .init(occasion: .weddingGuest, timeOfDay: .evening, weatherFeel: .mild)),
-        ("Temple visit", .init(occasion: .puja, weatherFeel: .mild, flags: [.religiousSite])),
-        ("Travel day", .init(occasion: .travel, weatherFeel: .mild, flags: [.lotsOfWalking])),
-        ("Casual weekend, hot", .init(occasion: .casualDay, weatherFeel: .hot)),
-        ("Evening out, cold", .init(occasion: .party, timeOfDay: .evening, weatherFeel: .cold)),
-    ]
+    /// The same ten requests the in-app rating sheet uses (one list, in the package).
+    static let rated: [(String, OccasionIntent)] = RatingSheet.requests.map { ($0.title, $0.intent) }
 
     static func intentLine(_ i: OccasionIntent) -> String {
         var p = ["\(i.occasion.rawValue)", "\(i.timeOfDay.rawValue)", "\(i.setting.rawValue)", "\(i.weatherFeel.rawValue)"]

@@ -1,4 +1,5 @@
 import Foundation
+import StyleEngine
 import SwiftData
 import SwiftUI
 import WardrobeImaging
@@ -9,9 +10,11 @@ import WardrobeImaging
     let provider: any AIProvider
     let store: ImageStore
     let tagging: TaggingQueue
+    /// Today's weather for the default `weatherFeel` (Open-Meteo, coarse location). Nil in tests that do not want the network.
+    let weather: TodaysWeather?
 
-    init(container: ModelContainer, provider: any AIProvider, store: ImageStore = .standard) {
-        self.provider = provider; self.store = store
+    init(container: ModelContainer, provider: any AIProvider, store: ImageStore = .standard, weather: TodaysWeather? = nil) {
+        self.provider = provider; self.store = store; self.weather = weather
         tagging = TaggingQueue(container: container, store: store, tagger: provider.makeTagger())
     }
 }

@@ -117,6 +117,16 @@ struct ReviewView: View {
                     }.buttonStyle(.bordered).disabled(preparingAdjust)
                 }
             }
+            if let d = p.duplicate {
+                VStack(alignment: .leading, spacing: 8) {
+                    Label("Is this the same as \(d.name.isEmpty ? "an item you already have" : d.name)?", systemImage: "square.on.square").font(.subheadline.weight(.semibold))
+                    Text(String(format: "Photo match %.2f (lower is closer)", d.distance)).font(.caption2).foregroundStyle(.secondary)
+                    HStack {
+                        Button("Same, discard this photo", role: .destructive) { model.discardAsDuplicate(p.id) }.buttonStyle(.bordered)
+                        Button("Different") { model.keepBoth(p.id) }.buttonStyle(.borderedProminent)
+                    }.controlSize(.small)
+                }.padding(12).frame(maxWidth: .infinity, alignment: .leading).background(.yellow.opacity(0.15), in: RoundedRectangle(cornerRadius: 10))
+            }
             if let note = model.note(p) {
                 HStack {
                     Label(note, systemImage: "exclamationmark.triangle").font(.footnote).foregroundStyle(.orange)

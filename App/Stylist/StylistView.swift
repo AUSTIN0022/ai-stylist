@@ -29,6 +29,7 @@ struct StylistView: View {
             .safeAreaInset(edge: .bottom, spacing: 0) { inputBar }          // always visible, above the tab bar and the keyboard
             .navigationTitle("Stylist").navigationBarTitleDisplayMode(.inline)
             .onAppear { if vm == nil { vm = .live(env, context: context) } }
+            .task { await vm?.refreshWeather() }
         }
     }
 

@@ -42,15 +42,33 @@ extension Occasion {
     let today: Date
     let store: ImageStore
     private let parser: IntentParser, writer: NoteWriter, context: ModelContext
+    private let weather: TodaysWeather?
+    /// Today's weather (Sprint 6), once known: the default `weatherFeel` when the user's words say nothing about it.
+    private(set) var todaysWeather: WeatherFeel = .unknown
     private var recent: [String] = []               // user messages, last three
     private var swapped: Set<UUID> = []             // outfits whose note no longer matches their items
 
-    init(parser: IntentParser, writer: NoteWriter, context: ModelContext, store: ImageStore = .standard, today: Date = .now) {
-        self.parser = parser; self.writer = writer; self.context = context; self.store = store; self.today = today
+    init(parser: IntentParser, writer: NoteWriter, context: ModelContext, store: ImageStore = .standard, today: Date = .now,
+         weather: TodaysWeather? = nil) {
+        self.parser = parser; self.writer = writer; self.context = context; self.store = store; self.today = today; self.weather = weather
+    }
+
+    /// One cached request per day, never throws; `unknown` when it cannot be had. Cheap to call again. The Stylist tab calls it when it
+    /// opens, so a request never waits on the location prompt or the network.
+    func refreshWeather() async {
+        guard let weather else { return }
+        todaysWeather = await weather.feel(on: today)
+    }
+
+    /// The first intent of a session gets today's weather when it names none. Later ones keep what the user set (including "Any weather").
+    private func defaulted(_ i: OccasionIntent, previous: OccasionIntent?) -> OccasionIntent {
+        guard previous == nil, i.weatherFeel == .unknown else { return i }
+        var i = i; i.weatherFeel = todaysWeather; return i
     }
 
     static func live(_ env: AppEnvironment, context: ModelContext) -> StylistViewModel {
-        StylistViewModel(parser: env.provider.makeIntentParser(), writer: env.provider.makeNoteWriter(), context: context, store: env.store)
+        StylistViewModel(parser: env.provider.makeIntentParser(), writer: env.provider.makeNoteWriter(), context: context, store: env.store,
+                         weather: env.weather)
     }
 
     var outfits: [ShownOutfit] { session.outfits }
@@ -83,16 +101,17 @@ extension Occasion {
         let prev = intent, before = Array(recent.suffix(2))
         recent = Array((recent + [message]).suffix(3))
         do {
-            intent = try await AICall.record(purpose: "intent", provider: loggedProvider(of: parser), model: parser.version, tokens: { [parser] in (parser as? TokenReporting)?.lastTokenCount },
+            let parsed = try await AICall.record(purpose: "intent", provider: loggedProvider(of: parser), model: parser.version, tokens: { [parser] in (parser as? TokenReporting)?.lastTokenCount },
                                              sink: { await self.log($0) }) { try await parser.parse(message: message, previous: prev, recent: before) }
+            intent = defaulted(parsed, previous: prev)
         } catch {
-            intent = prev ?? IntentMerge.chipIntent(for: .casualDay)
+            intent = prev ?? defaulted(IntentMerge.chipIntent(for: .casualDay), previous: nil)
         }
         run()
     }
 
     /// Occasion chip: the table's intent, no AI.
-    func choose(_ o: Occasion) { lastMessage = nil; intent = IntentMerge.chipIntent(for: o); run() }
+    func choose(_ o: Occasion) { lastMessage = nil; intent = defaulted(IntentMerge.chipIntent(for: o), previous: intent); run() }
 
     /// Intent chip edit: new intent, shown keys cleared, no AI.
     func edit(_ change: (inout OccasionIntent) -> Void) {

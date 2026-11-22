@@ -29,6 +29,8 @@ enum ItemStatus: String, Codable, Sendable { case tagging, ready, failed, archiv
     var displayFile: String
     var taggerVersion: String?
     var lastWornAt: Date?
+    /// When the item first became `ready` (Sprint 6: time-to-add metric). Nil for older items and while tagging.
+    var readyAt: Date?
     var cutoutFailed: Bool
     var lastError: String?
     var featurePrintData: Data?   // filled in Sprint 6; declared now so the store never changes
