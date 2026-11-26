@@ -1,9 +1,46 @@
+# XcodeGen-generated project (regenerate with `xcodegen generate` from project.yml)
 AIStylist.xcodeproj/
+*.xcworkspace/
+
+# Xcode user & build artifacts
 xcuserdata/
+*.xcuserstate
+*.xcuserdatad/
 DerivedData/
+build/
+ModuleCache/
+*.ipa
+*.dSYM
+*.dSYM.zip
+*.xcarchive
+*.xcresult
+*.hmap
+*.moved-aside
+*.pbxuser
+*.mode1v3
+*.mode2v3
+*.perspectivev3
+
+# Swift Package Manager build & local metadata
 .build/
 .swiftpm/
+
+# Local configuration & secrets
 *.xcconfig.local
+.env
+.env.*
+!.env.example
+
+# Personal evaluation photos & local ground-truth JSON (keep directory & template tracked)
 EvalPhotos/*
 !EvalPhotos/.gitkeep
+!EvalPhotos/expected.template.json
+
+# OS & editor files
 .DS_Store
+**/.DS_Store
+*.swp
+*.swo
+*~
+*.log
+.vscode/

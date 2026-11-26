@@ -1,0 +1,465 @@
+{
+  "shirt_rust_mandarin": {
+    "category": "top",
+    "subcategory": "shirt",
+    "colors": [
+      "rust"
+    ],
+    "fabric": "cottonLinen",
+    "fit": "relaxed",
+    "collar": "mandarin",
+    "dressCodes": [
+      "smartCasual"
+    ]
+  },
+  "shirt_forest_green_linen": {
+    "category": "top",
+    "subcategory": "shirt",
+    "colors": [
+      "green"
+    ],
+    "fabric": "cottonLinen",
+    "fit": "relaxed",
+    "collar": "spread",
+    "dressCodes": [
+      "casual"
+    ]
+  },
+  "shirt_light_blue_oxford": {
+    "category": "top",
+    "subcategory": "shirt",
+    "colors": [
+      "lightBlue"
+    ],
+    "fabric": "cotton",
+    "fit": "regular",
+    "collar": "buttonDown",
+    "dressCodes": [
+      "smartCasual"
+    ]
+  },
+  "shirt_navy_linen_blend": {
+    "category": "top",
+    "subcategory": "shirt",
+    "colors": [
+      "navy"
+    ],
+    "fabric": "cottonLinen",
+    "fit": "regular",
+    "collar": "spread",
+    "dressCodes": [
+      "smartCasual"
+    ]
+  },
+  "shirt_terracotta_check": {
+    "category": "top",
+    "subcategory": "shirt",
+    "colors": [
+      "rust",
+      "cream",
+      "navy"
+    ],
+    "pattern": "check",
+    "fabric": "cottonLinen",
+    "fit": "regular",
+    "collar": "spread",
+    "dressCodes": [
+      "casual"
+    ]
+  },
+  "shirt_brown_linen": {
+    "category": "top",
+    "subcategory": "shirt",
+    "colors": [
+      "brown"
+    ],
+    "fabric": "cottonLinen",
+    "fit": "loose",
+    "collar": "spread",
+    "dressCodes": [
+      "casual"
+    ]
+  },
+  "tee_white_slim": {
+    "category": "top",
+    "subcategory": "tshirt",
+    "colors": [
+      "white"
+    ],
+    "pattern": "solid",
+    "fabric": "jersey",
+    "fit": "slim",
+    "collar": "crew",
+    "sleeve": "short",
+    "dressCodes": [
+      "casual"
+    ]
+  },
+  "tee_black_slim": {
+    "category": "top",
+    "subcategory": "tshirt",
+    "colors": [
+      "black"
+    ],
+    "pattern": "solid",
+    "fit": "slim",
+    "sleeve": "short",
+    "dressCodes": [
+      "casual"
+    ]
+  },
+  "tee_navy_textured": {
+    "category": "top",
+    "subcategory": "tshirt",
+    "colors": [
+      "navy"
+    ],
+    "pattern": "textured",
+    "fit": "relaxed",
+    "sleeve": "short",
+    "dressCodes": [
+      "casual"
+    ]
+  },
+  "tee_green_graphic": {
+    "category": "top",
+    "subcategory": "tshirt",
+    "colors": [
+      "green"
+    ],
+    "pattern": "graphic",
+    "fit": "relaxed",
+    "sleeve": "short",
+    "dressCodes": [
+      "casual"
+    ]
+  },
+  "tee_black_graphic": {
+    "category": "top",
+    "subcategory": "tshirt",
+    "colors": [
+      "black"
+    ],
+    "pattern": "graphic",
+    "fit": "relaxed",
+    "sleeve": "short",
+    "dressCodes": [
+      "casual"
+    ]
+  },
+  "pants_black_jeans": {
+    "category": "bottom",
+    "subcategory": "jeans",
+    "colors": [
+      "black"
+    ],
+    "pattern": "solid",
+    "fabric": "denim",
+    "fit": "relaxed",
+    "dressCodes": [
+      "casual"
+    ]
+  },
+  "pants_black_chinos_straight": {
+    "category": "bottom",
+    "subcategory": "chinos",
+    "colors": [
+      "black"
+    ],
+    "pattern": "solid",
+    "fabric": "twill",
+    "dressCodes": [
+      "smartCasual"
+    ]
+  },
+  "pants_black_chinos_relaxed": {
+    "category": "bottom",
+    "subcategory": "chinos",
+    "colors": [
+      "black"
+    ],
+    "pattern": "solid",
+    "fabric": "twill",
+    "fit": "relaxed",
+    "dressCodes": [
+      "casual"
+    ]
+  },
+  "pants_grey_loose": {
+    "category": "bottom",
+    "subcategory": "jeans",
+    "colors": [
+      "grey"
+    ],
+    "pattern": "solid",
+    "fabric": "denim",
+    "fit": "loose",
+    "dressCodes": [
+      "casual"
+    ]
+  },
+  "pants_beige_cream_relaxed": {
+    "category": "bottom",
+    "subcategory": "jeans",
+    "colors": [
+      "beige"
+    ],
+    "pattern": "solid",
+    "fabric": "denim",
+    "fit": "relaxed",
+    "dressCodes": [
+      "casual"
+    ]
+  },
+  "pants_brown_linen": {
+    "category": "bottom",
+    "subcategory": "trousers",
+    "colors": [
+      "brown"
+    ],
+    "pattern": "solid",
+    "fabric": "linen",
+    "fit": "relaxed"
+  },
+  "pants_taupe_chinos": {
+    "category": "bottom",
+    "subcategory": "chinos",
+    "pattern": "solid",
+    "fabric": "twill"
+  },
+  "pants_cord_navy": {
+    "category": "bottom",
+    "subcategory": "trousers",
+    "colors": [
+      "navy"
+    ],
+    "fabric": "corduroy",
+    "fit": "relaxed"
+  },
+  "pants_cord_olive": {
+    "category": "bottom",
+    "subcategory": "trousers",
+    "colors": [
+      "olive"
+    ],
+    "fabric": "corduroy"
+  },
+  "pants_indigo_straight": {
+    "category": "bottom",
+    "subcategory": "jeans",
+    "pattern": "solid",
+    "fabric": "denim",
+    "fit": "regular"
+  },
+  "shoes_white_gum_sneakers": {
+    "category": "footwear",
+    "subcategory": "sneakers",
+    "colors": [
+      "cream"
+    ],
+    "fabric": "leather",
+    "dressCodes": [
+      "smartCasual"
+    ]
+  },
+  "shoes_black_sambas": {
+    "category": "footwear",
+    "subcategory": "sneakers",
+    "colors": [
+      "black"
+    ],
+    "dressCodes": [
+      "casual"
+    ]
+  },
+  "shoes_white_af1": {
+    "category": "footwear",
+    "subcategory": "sneakers",
+    "colors": [
+      "white"
+    ],
+    "dressCodes": [
+      "casual"
+    ]
+  },
+  "shoes_black_chelsea": {
+    "category": "footwear",
+    "subcategory": "boots",
+    "colors": [
+      "black"
+    ]
+  },
+  "shoes_birkenstock_sandals": {
+    "category": "footwear",
+    "subcategory": "sandals",
+    "dressCodes": [
+      "casual"
+    ]
+  },
+  "shoes_black_slides": {
+    "category": "footwear",
+    "subcategory": "slides",
+    "colors": [
+      "black"
+    ],
+    "dressCodes": [
+      "home"
+    ]
+  },
+  "acc_gold_crucifix_chain": {
+    "category": "accessory",
+    "subcategory": "chain",
+    "colors": [
+      "gold"
+    ]
+  },
+  "acc_watch": {
+    "category": "accessory",
+    "subcategory": "watch"
+  },
+  "acc_clear_glasses": {
+    "category": "accessory",
+    "subcategory": "glasses"
+  },
+  "acc_black_belt": {
+    "category": "accessory",
+    "subcategory": "belt",
+    "colors": [
+      "black"
+    ]
+  },
+  "knit_navy_polo": {
+    "category": "top",
+    "colors": [
+      "navy"
+    ],
+    "pattern": "solid",
+    "fabric": "knit",
+    "fit": "slim",
+    "collar": "camp",
+    "sleeve": "long"
+  },
+  "knit_cream_quarter_zip": {
+    "category": "top",
+    "subcategory": "sweater",
+    "colors": [
+      "cream"
+    ],
+    "pattern": "solid",
+    "fabric": "knit",
+    "fit": "regular",
+    "collar": "zipStand",
+    "sleeve": "long"
+  },
+  "knit_grey_zip_polo": {
+    "category": "top",
+    "colors": [
+      "charcoal"
+    ],
+    "fit": "regular",
+    "collar": "spread",
+    "sleeve": "long"
+  },
+  "knit_brown_cable_polo": {
+    "category": "top",
+    "subcategory": "sweater",
+    "colors": [
+      "brown"
+    ],
+    "pattern": "textured",
+    "fabric": "knit",
+    "collar": "polo"
+  },
+  "polo_rugby_green_navy": {
+    "category": "top",
+    "subcategory": "polo",
+    "colors": [
+      "navy",
+      "green",
+      "white"
+    ],
+    "pattern": "stripe",
+    "fabric": "jersey",
+    "fit": "relaxed",
+    "collar": "polo",
+    "sleeve": "long",
+    "dressCodes": [
+      "casual"
+    ]
+  },
+  "polo_brown_tee": {
+    "category": "top",
+    "subcategory": "polo",
+    "colors": [
+      "brown"
+    ],
+    "pattern": "solid",
+    "fit": "regular",
+    "collar": "polo",
+    "sleeve": "short",
+    "dressCodes": [
+      "casual"
+    ]
+  },
+  "polo_burgundy_collar_tee": {
+    "category": "top",
+    "subcategory": "polo",
+    "colors": [
+      "maroon"
+    ],
+    "pattern": "solid",
+    "fit": "relaxed",
+    "collar": "polo",
+    "sleeve": "short",
+    "dressCodes": [
+      "casual"
+    ]
+  },
+  "jacket_navy_hoodie": {
+    "category": "outerwear",
+    "subcategory": "hoodie",
+    "colors": [
+      "navy"
+    ],
+    "pattern": "solid",
+    "fit": "regular",
+    "collar": "hooded",
+    "sleeve": "long",
+    "dressCodes": [
+      "casual"
+    ]
+  },
+  "jacket_charcoal_zip_google": {
+    "category": "outerwear",
+    "subcategory": "jacket",
+    "colors": [
+      "charcoal"
+    ],
+    "dressCodes": [
+      "casual"
+    ]
+  },
+  "jacket_black_windcheater": {
+    "category": "outerwear",
+    "subcategory": "jacket",
+    "colors": [
+      "black"
+    ],
+    "dressCodes": [
+      "casual"
+    ]
+  },
+  "jacket_teal_blue_zip_hoodie": {
+    "category": "outerwear",
+    "colors": [
+      "teal"
+    ],
+    "fabric": "fleece",
+    "fit": "regular",
+    "collar": "hooded",
+    "sleeve": "long",
+    "dressCodes": [
+      "casual"
+    ]
+  }
+}
